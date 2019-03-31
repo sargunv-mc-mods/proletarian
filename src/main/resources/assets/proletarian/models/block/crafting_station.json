@@ -1,0 +1,12 @@
+{
+    "parent": "block/cube",
+    "textures": {
+        "particle": "proletarian:block/crafting_station_front",
+        "down": "proletarian:block/crafting_station_bottom",
+        "up": "proletarian:block/crafting_station_top",
+        "north": "proletarian:block/crafting_station_front",
+        "east": "proletarian:block/crafting_station_side",
+        "south": "proletarian:block/crafting_station_side",
+        "west": "proletarian:block/crafting_station_front"
+    }
+}
