@@ -3,7 +3,6 @@
     "package": "me.sargunvohra.mcmods.proletarian.mixin",
     "compatibilityLevel": "JAVA_8",
     "mixins": [
-        "ClientRecipeBookMixin"
     ],
     "injectors": {
         "defaultRequire": 1

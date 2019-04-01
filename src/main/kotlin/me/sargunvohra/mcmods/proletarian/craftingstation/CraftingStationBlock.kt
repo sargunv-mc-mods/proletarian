@@ -18,6 +18,7 @@ import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.BlockView
 import net.minecraft.world.World
+import org.apache.logging.log4j.LogManager
 
 @Suppress("OverridingDeprecatedMember")
 object CraftingStationBlock : BlockWithEntity(
@@ -33,9 +34,14 @@ object CraftingStationBlock : BlockWithEntity(
 
     override fun activate(state: BlockState, world: World, pos: BlockPos, player: PlayerEntity, hand: Hand, blockHitPos: BlockHitResult): Boolean {
         if (!world.isClient) {
+            val container = if (blockHitPos.pos.y - blockHitPos.blockPos.y > .75)
+                CraftingStationInit.CRAFTING_ID
+            else
+                CraftingStationInit.STORAGE_ID
+
             val entity = world.getBlockEntity(pos)
             if (entity is CraftingStationBlockEntity) {
-                ContainerProviderRegistry.INSTANCE.openContainer(CraftingStationInit.ID, player) {
+                ContainerProviderRegistry.INSTANCE.openContainer(container, player) {
                     it.writeBlockPos(pos)
                     it.writeTextComponent(entity.name)
                 }
@@ -59,7 +65,7 @@ object CraftingStationBlock : BlockWithEntity(
             val entity = world.getBlockEntity(pos)
             if (entity is CraftingStationBlockEntity) {
                 ItemScatterer.spawn(world, pos, entity.craftingInv)
-                ItemScatterer.spawn(world, pos, entity.internalInv)
+                ItemScatterer.spawn(world, pos, entity)
                 world.updateHorizontalAdjacent(pos, this)
             }
         }

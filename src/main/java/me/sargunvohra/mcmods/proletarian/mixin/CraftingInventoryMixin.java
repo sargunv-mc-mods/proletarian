@@ -1,6 +1,6 @@
 package me.sargunvohra.mcmods.proletarian.mixin;
 
-import me.sargunvohra.mcmods.proletarian.mixinapi.SetContainer;
+import me.sargunvohra.mcmods.proletarian.mixinapi.MixinSettable;
 import net.minecraft.container.Container;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.Inventories;
@@ -9,15 +9,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.RecipeInputProvider;
 import net.minecraft.util.DefaultedList;
 import org.spongepowered.asm.mixin.*;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 
 @Mixin(CraftingInventory.class)
-public abstract class CraftingInventoryMixin implements Inventory, RecipeInputProvider, SetContainer {
+public abstract class CraftingInventoryMixin implements Inventory, RecipeInputProvider, MixinSettable<Container> {
 
     @Shadow
     @Final
@@ -29,8 +23,8 @@ public abstract class CraftingInventoryMixin implements Inventory, RecipeInputPr
     private Container container;
 
     @Override
-    public void setContainer(Container container) {
-        this.container = container;
+    public void mixinSet(Container value) {
+        this.container = value;
         if (this.container != null) {
             this.container.onContentChanged(this);
         }
