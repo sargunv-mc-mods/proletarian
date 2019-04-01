@@ -15,7 +15,7 @@ import net.minecraft.util.registry.Registry
 
 object CraftingStationInit {
 
-    val ID = id("crafting_station")
+    private val ID = id("crafting_station")
     val CRAFTING_ID = id("crafting_station_crafting_container")
     val STORAGE_ID = id("crafting_station_storage_container")
     val BLOCK_ENTITY_TYPE = BlockEntityType.Builder.create {

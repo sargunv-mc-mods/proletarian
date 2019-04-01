@@ -4,9 +4,9 @@
     "compatibilityLevel": "JAVA_8",
     "mixins": [
         "CraftingInventoryMixin",
+        "CraftingResultSlotAccess",
         "CraftingTableContainerMixin",
-        "SlotMixin",
-        "CraftingResultSlotMixin"
+        "SlotAccess"
     ],
     "injectors": {
         "defaultRequire": 1

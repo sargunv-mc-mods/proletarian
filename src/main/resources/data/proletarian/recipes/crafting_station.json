@@ -1,0 +1,18 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "@",
+        "#"
+    ],
+    "key": {
+        "@": {
+            "item": "minecraft:crafting_table"
+        },
+        "#": {
+            "item": "minecraft:barrel"
+        }
+    },
+    "result": {
+        "item": "proletarian:crafting_station"
+    }
+}

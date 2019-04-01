@@ -18,7 +18,6 @@ import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.BlockView
 import net.minecraft.world.World
-import org.apache.logging.log4j.LogManager
 
 @Suppress("OverridingDeprecatedMember")
 object CraftingStationBlock : BlockWithEntity(

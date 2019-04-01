@@ -1,6 +1,7 @@
 package me.sargunvohra.mcmods.proletarian.craftingstation
 
-import me.sargunvohra.mcmods.proletarian.mixinapi.MixinSettable
+import me.sargunvohra.mcmods.proletarian.mixinapi.ModifiedCraftingInventory
+import me.sargunvohra.mcmods.proletarian.mixinapi.ModifiedCraftingTableContainer
 import net.minecraft.container.BlockContext
 import net.minecraft.container.Container
 import net.minecraft.container.CraftingTableContainer
@@ -20,9 +21,9 @@ class PersistentCraftingContainer(
 
     init {
         @Suppress("CAST_NEVER_SUCCEEDS")
-        (this as MixinSettable<CraftingInventory>).mixinSet(craftingInv)
+        (this as ModifiedCraftingTableContainer).setCraftingInventory(craftingInv)
         @Suppress("UNCHECKED_CAST")
-        (craftingInv as MixinSettable<Container>).mixinSet(this)
+        (craftingInv as ModifiedCraftingInventory).setContainer(this)
     }
 
     override fun onContentChanged(inventory: Inventory) {
@@ -42,7 +43,7 @@ class PersistentCraftingContainer(
         }
 
         @Suppress("UNCHECKED_CAST")
-        (craftingInv as MixinSettable<Container>).mixinSet(null)
+        (craftingInv as ModifiedCraftingInventory).setContainer(null)
     }
 
     override fun canUse(player: PlayerEntity) =

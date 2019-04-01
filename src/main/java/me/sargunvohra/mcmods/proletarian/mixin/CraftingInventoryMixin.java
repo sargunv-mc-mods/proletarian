@@ -1,6 +1,6 @@
 package me.sargunvohra.mcmods.proletarian.mixin;
 
-import me.sargunvohra.mcmods.proletarian.mixinapi.MixinSettable;
+import me.sargunvohra.mcmods.proletarian.mixinapi.ModifiedCraftingInventory;
 import net.minecraft.container.Container;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.Inventories;
@@ -11,7 +11,7 @@ import net.minecraft.util.DefaultedList;
 import org.spongepowered.asm.mixin.*;
 
 @Mixin(CraftingInventory.class)
-public abstract class CraftingInventoryMixin implements Inventory, RecipeInputProvider, MixinSettable<Container> {
+public abstract class CraftingInventoryMixin implements Inventory, RecipeInputProvider, ModifiedCraftingInventory {
 
     @Shadow
     @Final
@@ -23,8 +23,8 @@ public abstract class CraftingInventoryMixin implements Inventory, RecipeInputPr
     private Container container;
 
     @Override
-    public void mixinSet(Container value) {
-        this.container = value;
+    public void setContainer(Container newContainer) {
+        this.container = newContainer;
         if (this.container != null) {
             this.container.onContentChanged(this);
         }

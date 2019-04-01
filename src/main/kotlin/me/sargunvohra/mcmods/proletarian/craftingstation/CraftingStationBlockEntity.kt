@@ -9,7 +9,6 @@ import net.minecraft.inventory.Inventory
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.text.TextComponent
 import net.minecraft.text.TranslatableTextComponent
-import org.apache.logging.log4j.LogManager
 
 class CraftingStationBlockEntity(
     val craftingInv: CraftingInventory = CraftingInventory(null, 3, 3),
