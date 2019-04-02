@@ -10,8 +10,8 @@
     "icon": "assets/proletarian/icon.png",
     "side": "universal",
     "initializers": [
-        "me.sargunvohra.mcmods.proletarian.Proletarian",
-        "me.sargunvohra.mcmods.proletarian.ProletarianClient"
+        "me.sargunvohra.mcmods.proletarian.ProletarianInit",
+        "me.sargunvohra.mcmods.proletarian.ProletarianClientInit"
     ],
     "languageAdapter": "net.fabricmc.language.kotlin.KotlinLanguageAdapter",
     "requires": {

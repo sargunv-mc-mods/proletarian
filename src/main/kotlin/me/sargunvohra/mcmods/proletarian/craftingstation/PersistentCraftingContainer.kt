@@ -22,14 +22,15 @@ class PersistentCraftingContainer(
     init {
         @Suppress("CAST_NEVER_SUCCEEDS")
         (this as ModifiedCraftingTableContainer).setCraftingInventory(craftingInv)
-        @Suppress("UNCHECKED_CAST")
         (craftingInv as ModifiedCraftingInventory).setContainer(this)
     }
 
     override fun onContentChanged(inventory: Inventory) {
         super.onContentChanged(inventory)
+
+        // make sure to save the crafting station when we modify the crafting grid
         worldPos.run { world, pos ->
-            (world.getBlockEntity(pos) as? CraftingStationBlockEntity)?.markDirty()
+            world.getBlockEntity(pos)?.markDirty()
         }
     }
 
@@ -42,7 +43,6 @@ class PersistentCraftingContainer(
             playerInv.cursorStack = ItemStack.EMPTY
         }
 
-        @Suppress("UNCHECKED_CAST")
         (craftingInv as ModifiedCraftingInventory).setContainer(null)
     }
 

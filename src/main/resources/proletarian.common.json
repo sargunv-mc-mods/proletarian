@@ -6,7 +6,8 @@
         "CraftingInventoryMixin",
         "CraftingResultSlotAccess",
         "CraftingTableContainerMixin",
-        "SlotAccess"
+        "SlotAccess",
+        "VillagerTaskListProviderMixin"
     ],
     "injectors": {
         "defaultRequire": 1

@@ -18,24 +18,24 @@ import kotlin.reflect.full.isSubclassOf
 
 object CustomProfessionInit {
 
+    val POI_ID = id("proletarian_poi")
+    val PROFESSION_ID = id("proletarian")
+
+    val POI_BLOCK_TAG = construct(
+        BlockTags::class.nestedClasses.first { it.isSubclassOf(Tag::class) },
+        POI_ID
+    )
+    val POI_TYPE = construct(
+        PointOfInterestType::class,
+        POI_ID.toString(), POI_BLOCK_TAG, 1, SoundEvents.ENTITY_VILLAGER_WORK_TOOLSMITH
+    )
+    val PROFESSION = construct(
+        VillagerProfession::class,
+        PROFESSION_ID.toString(), POI_TYPE, ImmutableSet.of<Item>(), ImmutableSet.of<Block>()
+    )
+
     fun register() {
-        val poiId = id("proletarian_poi")
-        val professionId = id("proletarian")
-
-        val poiBlockTag = construct(
-            BlockTags::class.nestedClasses.first { it.isSubclassOf(Tag::class) },
-            poiId
-        )
-        val poiType = construct(
-            PointOfInterestType::class,
-            poiId.toString(), poiBlockTag, 1, SoundEvents.ENTITY_VILLAGER_WORK_TOOLSMITH
-        )
-        val profession = construct(
-            VillagerProfession::class,
-            professionId.toString(), poiType, ImmutableSet.of<Item>(), ImmutableSet.of<Block>()
-        )
-
-        Registry.register(Registry.POINT_OF_INTEREST_TYPE, poiId, poiType)
-        Registry.register(Registry.VILLAGER_PROFESSION, professionId, profession)
+        Registry.register(Registry.POINT_OF_INTEREST_TYPE, POI_ID, POI_TYPE)
+        Registry.register(Registry.VILLAGER_PROFESSION, PROFESSION_ID, PROFESSION)
     }
 }

@@ -6,6 +6,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.DefaultedList
 import net.minecraft.util.Identifier
+import net.minecraft.util.math.BlockPos
 import kotlin.reflect.KClass
 import kotlin.reflect.jvm.isAccessible
 
@@ -31,4 +32,15 @@ fun Inventory.invFromTag(tag: CompoundTag) {
     val savedContent = DefaultedList.create(invSize, ItemStack.EMPTY)
     Inventories.fromTag(tag, savedContent)
     savedContent.forEachIndexed(this::setInvStack)
+}
+
+val BlockPos.neighbors: Set<BlockPos> get() = setOf(north(), south(), east(), west(), down(), up())
+
+fun ItemStack.canMergeWith(other: ItemStack): Boolean {
+    return when {
+        item !== other.item -> false
+        damage != other.damage -> false
+        amount > maxAmount -> false
+        else -> ItemStack.areTagsEqual(this, other)
+    }
 }
