@@ -13,19 +13,16 @@ import net.minecraft.village.PointOfInterestType
 import net.minecraft.village.VillagerProfession
 import kotlin.reflect.full.isSubclassOf
 
-// TODO add craft task in VillagerEntity.initBrain()
-// TODO add completed condition for no recipe available in poi type
-
 object CustomProfessionInit {
 
-    val POI_ID = id("proletarian_poi")
-    val PROFESSION_ID = id("proletarian")
+    private val POI_ID = id("proletarian_poi")
+    private val PROFESSION_ID = id("proletarian")
 
-    val POI_BLOCK_TAG = construct(
+    private val POI_BLOCK_TAG = construct(
         BlockTags::class.nestedClasses.first { it.isSubclassOf(Tag::class) },
         POI_ID
     )
-    val POI_TYPE = construct(
+    private val POI_TYPE = construct(
         PointOfInterestType::class,
         POI_ID.toString(), POI_BLOCK_TAG, 1, SoundEvents.ENTITY_VILLAGER_WORK_TOOLSMITH
     )

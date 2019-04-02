@@ -21,11 +21,14 @@ class CraftTask : Task<VillagerEntity>() {
     private var nextCraftTime = 0L
     private lateinit var targetStation: CraftingStationBlockEntity
 
+    private fun memoryStatePair(type: MemoryModuleType<*>, state: MemoryModuleState) =
+        Pair.of(type, state)
+
     override fun getRequiredMemoryState(): Set<Pair<MemoryModuleType<*>, MemoryModuleState>> {
         return setOf(
-            Pair.of<MemoryModuleType<*>, MemoryModuleState>(MemoryModuleType.LOOK_TARGET, MemoryModuleState.VALUE_ABSENT),
-            Pair.of<MemoryModuleType<*>, MemoryModuleState>(MemoryModuleType.WALK_TARGET, MemoryModuleState.VALUE_ABSENT),
-            Pair.of<MemoryModuleType<*>, MemoryModuleState>(MemoryModuleType.JOB_SITE, MemoryModuleState.VALUE_PRESENT)
+            memoryStatePair(MemoryModuleType.LOOK_TARGET, MemoryModuleState.VALUE_ABSENT),
+            memoryStatePair(MemoryModuleType.WALK_TARGET, MemoryModuleState.VALUE_ABSENT),
+            memoryStatePair(MemoryModuleType.JOB_SITE, MemoryModuleState.VALUE_PRESENT)
         )
     }
 

@@ -31,7 +31,14 @@ object CraftingStationBlock : BlockWithEntity(
         return CraftingStationBlockEntity()
     }
 
-    override fun activate(state: BlockState, world: World, pos: BlockPos, player: PlayerEntity, hand: Hand, blockHitPos: BlockHitResult): Boolean {
+    override fun activate(
+        state: BlockState,
+        world: World,
+        pos: BlockPos,
+        player: PlayerEntity,
+        hand: Hand,
+        blockHitPos: BlockHitResult
+    ): Boolean {
         if (!world.isClient) {
             val container = if (blockHitPos.pos.y - blockHitPos.blockPos.y > .75)
                 CraftingStationInit.CRAFTING_ID
@@ -50,7 +57,13 @@ object CraftingStationBlock : BlockWithEntity(
         return true
     }
 
-    override fun onPlaced(world: World, pos: BlockPos, state: BlockState, placer: LivingEntity?, stack: ItemStack) {
+    override fun onPlaced(
+        world: World,
+        pos: BlockPos,
+        state: BlockState,
+        placer: LivingEntity?,
+        stack: ItemStack
+    ) {
         if (stack.hasDisplayName()) {
             val entity = world.getBlockEntity(pos)
             if (entity is CraftingStationBlockEntity) {
@@ -59,7 +72,13 @@ object CraftingStationBlock : BlockWithEntity(
         }
     }
 
-    override fun onBlockRemoved(state1: BlockState, world: World, pos: BlockPos, state2: BlockState, someBool: Boolean) {
+    override fun onBlockRemoved(
+        state1: BlockState,
+        world: World,
+        pos: BlockPos,
+        state2: BlockState,
+        someBool: Boolean
+    ) {
         if (state1.block !== state2.block) {
             val entity = world.getBlockEntity(pos)
             if (entity is CraftingStationBlockEntity) {
