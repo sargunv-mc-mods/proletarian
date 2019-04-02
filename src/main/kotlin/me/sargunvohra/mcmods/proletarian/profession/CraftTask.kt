@@ -130,6 +130,8 @@ class CraftTask : Task<VillagerEntity>() {
             stack.addAmount(-1)
         }
 
+        markDirty()
+
         return resultAndRemaining
     }
 
