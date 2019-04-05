@@ -8,6 +8,7 @@ import net.minecraft.entity.ai.brain.BlockPosLookTarget
 import net.minecraft.entity.ai.brain.MemoryModuleState
 import net.minecraft.entity.ai.brain.MemoryModuleType
 import net.minecraft.entity.ai.brain.task.Task
+import net.minecraft.entity.effect.StatusEffects
 import net.minecraft.entity.passive.VillagerEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.recipe.RecipeType
@@ -16,7 +17,7 @@ import net.minecraft.sortme.ItemScatterer
 import net.minecraft.sound.SoundEvents
 import net.minecraft.util.DefaultedList
 
-class CraftTask : Task<VillagerEntity>() {
+class CraftTask : Task<VillagerEntity>(BASE_DELAY) {
 
     private var nextCraftTime = 0L
     private lateinit var targetStation: CraftingStationBlockEntity
@@ -26,15 +27,19 @@ class CraftTask : Task<VillagerEntity>() {
 
     override fun getRequiredMemoryState(): Set<Pair<MemoryModuleType<*>, MemoryModuleState>> {
         return setOf(
-            memoryStatePair(MemoryModuleType.LOOK_TARGET, MemoryModuleState.VALUE_ABSENT),
+            memoryStatePair(MemoryModuleType.LOOK_TARGET, MemoryModuleState.REGISTERED),
             memoryStatePair(MemoryModuleType.WALK_TARGET, MemoryModuleState.VALUE_ABSENT),
             memoryStatePair(MemoryModuleType.JOB_SITE, MemoryModuleState.VALUE_PRESENT)
         )
     }
 
     override fun shouldRun(world: ServerWorld, villager: VillagerEntity): Boolean {
+        // apply cool-down time
+        if (world.time < nextCraftTime)
+            return false
+
         // we are the right profession
-        if (villager.villagerData.profession != CustomProfessionInit.PROFESSION)
+        if (villager.villagerData.profession != CustomProfessionInit.profession)
             return false
 
         // we are allowed to interact with the world
@@ -48,6 +53,11 @@ class CraftTask : Task<VillagerEntity>() {
         val myPos = villager.blockPos
         val usablePosSet = myPos.neighbors.filter { it != myPos.up() }
         if (!usablePosSet.contains(jobSite.pos))
+            return false
+
+        // we are not focused on anything other than our job site
+        val lookTarget = villager.brain.getOptionalMemory(MemoryModuleType.LOOK_TARGET).orElse(null) ?: null
+        if (lookTarget != null && lookTarget.blockPos != jobSite.pos)
             return false
 
         // our job site is the right type
@@ -136,8 +146,8 @@ class CraftTask : Task<VillagerEntity>() {
     }
 
     override fun run(world: ServerWorld, villager: VillagerEntity, time: Long) {
-        if (time < nextCraftTime) return
-        nextCraftTime = time + DELAY
+        val delay = if (villager.hasPotionEffect(StatusEffects.SPEED)) BASE_DELAY else BASE_DELAY * 2
+        nextCraftTime = time + delay * 2
 
         if (!targetStation.hasUsableRecipe())
             return
@@ -166,6 +176,6 @@ class CraftTask : Task<VillagerEntity>() {
     }
 
     companion object {
-        private const val DELAY = 10L
+        private const val BASE_DELAY = 10
     }
 }
