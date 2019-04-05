@@ -32,7 +32,7 @@ class CraftTask : Task<VillagerEntity>() {
         )
     }
 
-    override fun canRun(world: ServerWorld, villager: VillagerEntity): Boolean {
+    override fun shouldRun(world: ServerWorld, villager: VillagerEntity): Boolean {
         // we are the right profession
         if (villager.villagerData.profession != CustomProfessionInit.PROFESSION)
             return false
@@ -42,7 +42,7 @@ class CraftTask : Task<VillagerEntity>() {
             return false
 
         // we are at our job site
-        val jobSite = villager.brain.getMemory(MemoryModuleType.JOB_SITE).get()
+        val jobSite = villager.brain.getOptionalMemory(MemoryModuleType.JOB_SITE).get()
         if (villager.dimension != jobSite.dimension)
             return false
         val myPos = villager.blockPos
@@ -61,7 +61,7 @@ class CraftTask : Task<VillagerEntity>() {
     private val CraftingStationBlockEntity.recipeManager get() = world?.server?.recipeManager
 
     private fun CraftingStationBlockEntity.getCurrentRecipe() =
-        recipeManager?.get(RecipeType.CRAFTING, craftingInv, world)?.orElse(null)
+        recipeManager?.getFirstMatch(RecipeType.CRAFTING, craftingInv, world)?.orElse(null)
 
     private fun CraftingStationBlockEntity.hasUsableRecipe(): Boolean {
         // do we have a recipe
@@ -119,7 +119,7 @@ class CraftTask : Task<VillagerEntity>() {
         // create result
         val resultAndRemaining = kotlin.Pair(
             recipe.craft(craftingInv),
-            recipeManager?.method_8128(RecipeType.CRAFTING, craftingInv, world)
+            recipeManager?.getRemainingStacks(RecipeType.CRAFTING, craftingInv, world)
                 ?: DefaultedList.create()
         )
 
