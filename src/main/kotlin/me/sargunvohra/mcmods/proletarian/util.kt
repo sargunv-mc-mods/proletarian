@@ -10,7 +10,6 @@ import net.minecraft.util.math.BlockPos
 import kotlin.reflect.KClass
 import kotlin.reflect.jvm.isAccessible
 import com.mojang.blaze3d.platform.GlStateManager
-import net.fabricmc.api.EnvType
 import net.minecraft.util.math.Direction
 
 fun id(name: String) = Identifier("proletarian", name)
