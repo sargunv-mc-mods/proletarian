@@ -1,44 +1,27 @@
 {
-    "schemaVersion": 1,
     "id": "proletarian",
     "version": "${version}",
-
     "name": "Proletarian",
     "description": "Automate crafting by putting villagers to work.",
     "authors": [
         "sargunv"
     ],
-    "contact": {
-        "homepage": "https://minecraft.curseforge.com/projects/proletarian",
-        "issues": "https://gitlab.com/sargunv-mc-mods/proletarian/issues",
-        "sources": "https://gitlab.com/sargunv-mc-mods/proletarian"
-    },
-
     "license": "Apache-2.0",
     "icon": "assets/proletarian/icon.png",
-
-    "environment": "*",
-    "entrypoints": {
-        "main": [
-            {
-                "adapter": "kotlin",
-                "value": "me.sargunvohra.mcmods.proletarian.ProletarianInit"
-            }
-        ],
-        "client": [
-            {
-                "adapter": "kotlin",
-                "value": "me.sargunvohra.mcmods.proletarian.ProletarianClientInit"
-            }
-        ]
-    },
-    "mixins": [
-        "proletarian.mixins.json"
+    "side": "universal",
+    "initializers": [
+        "me.sargunvohra.mcmods.proletarian.ProletarianInit",
+        "me.sargunvohra.mcmods.proletarian.ProletarianClientInit"
     ],
-
+    "languageAdapter": "net.fabricmc.language.kotlin.KotlinLanguageAdapter",
     "requires": {
-        "fabricloader": ">=0.4.0",
         "fabric": "*",
-        "fabric-language-kotlin": ">=1.3.21"
+        "fabric-language-kotlin": {
+            "version": ">=1.3.21"
+        }
+    },
+    "mixins": {
+        "client": "proletarian.client.json",
+        "common": "proletarian.common.json"
     }
 }
