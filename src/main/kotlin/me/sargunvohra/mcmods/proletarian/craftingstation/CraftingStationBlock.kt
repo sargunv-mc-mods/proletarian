@@ -2,20 +2,26 @@ package me.sargunvohra.mcmods.proletarian.craftingstation
 
 import net.fabricmc.fabric.api.block.FabricBlockSettings
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry
+import net.minecraft.block.Block
 import net.minecraft.block.BlockRenderType
 import net.minecraft.block.BlockState
 import net.minecraft.block.BlockWithEntity
 import net.minecraft.block.Material
-import net.minecraft.block.entity.BlockEntity
 import net.minecraft.container.Container
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.player.PlayerEntity
+import net.minecraft.item.ItemPlacementContext
 import net.minecraft.item.ItemStack
 import net.minecraft.sortme.ItemScatterer
 import net.minecraft.sound.BlockSoundGroup
+import net.minecraft.state.StateFactory
+import net.minecraft.state.property.Properties
 import net.minecraft.util.Hand
+import net.minecraft.util.Mirror
+import net.minecraft.util.Rotation
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.Direction
 import net.minecraft.world.BlockView
 import net.minecraft.world.World
 
@@ -27,9 +33,25 @@ object CraftingStationBlock : BlockWithEntity(
         .sounds(BlockSoundGroup.WOOD)
         .build()
 ) {
-    override fun createBlockEntity(blockView: BlockView): BlockEntity {
-        return CraftingStationBlockEntity()
+
+    init {
+        defaultState = stateFactory.defaultState.with(Properties.FACING_HORIZONTAL, Direction.NORTH)
     }
+
+    override fun getPlacementState(context: ItemPlacementContext) =
+        defaultState.with(Properties.FACING_HORIZONTAL, context.playerHorizontalFacing.opposite)!!
+
+    override fun rotate(state: BlockState, rotation: Rotation) =
+        state.with(Properties.FACING_HORIZONTAL, rotation.rotate(state.get(Properties.FACING_HORIZONTAL)))!!
+
+    override fun mirror(state: BlockState, mirror: Mirror) =
+        state.rotate(mirror.getRotation(state.get(Properties.FACING_HORIZONTAL)))!!
+
+    override fun appendProperties(stateFactoryBuilder: StateFactory.Builder<Block, BlockState>) {
+        stateFactoryBuilder.with(Properties.FACING_HORIZONTAL)
+    }
+
+    override fun createBlockEntity(blockView: BlockView) = CraftingStationBlockEntity()
 
     override fun activate(
         state: BlockState,

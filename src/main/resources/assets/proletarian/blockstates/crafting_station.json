@@ -1,5 +1,19 @@
 {
     "variants": {
-        "": { "model": "proletarian:block/crafting_station" }
+        "facing=north": {
+            "model": "proletarian:block/crafting_station"
+        },
+        "facing=south": {
+            "model": "proletarian:block/crafting_station",
+            "y": 180
+        },
+        "facing=west": {
+            "model": "proletarian:block/crafting_station",
+            "y": 270
+        },
+        "facing=east": {
+            "model": "proletarian:block/crafting_station",
+            "y": 90
+        }
     }
 }

@@ -23,10 +23,10 @@ object CraftingStationInit {
     }.build(null)!!
 
     fun register() {
-        val item = BlockItem(CraftingStationBlock, Item.Settings().itemGroup(ItemGroup.DECORATIONS))
-
         Registry.register(Registry.BLOCK, ID, CraftingStationBlock)
-        Registry.register(Registry.ITEM, ID, item)
+
+        Registry.register(
+            Registry.ITEM, ID, BlockItem(CraftingStationBlock, Item.Settings().itemGroup(ItemGroup.DECORATIONS)))
         Registry.register(Registry.BLOCK_ENTITY, ID, BLOCK_ENTITY_TYPE)
 
         ContainerProviderRegistry.INSTANCE.registerFactory(CRAFTING_ID) { syncId, _, player, buf ->
