@@ -9,6 +9,9 @@ import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import kotlin.reflect.KClass
 import kotlin.reflect.jvm.isAccessible
+import com.mojang.blaze3d.platform.GlStateManager
+import net.fabricmc.api.EnvType
+import net.minecraft.util.math.Direction
 
 fun id(name: String) = Identifier("proletarian", name)
 
@@ -42,5 +45,22 @@ fun ItemStack.canMergeWith(other: ItemStack): Boolean {
         damage != other.damage -> false
         amount > maxAmount -> false
         else -> ItemStack.areTagsEqual(this, other)
+    }
+}
+
+fun rotateRenderState(dir: Direction) {
+    when {
+        dir === Direction.EAST -> {
+            GlStateManager.rotated(-90.0, 0.0, 1.0, 0.0)
+            GlStateManager.translated(0.0, 0.0, -1.0)
+        }
+        dir === Direction.SOUTH -> {
+            GlStateManager.rotated(-180.0, 0.0, 1.0, 0.0)
+            GlStateManager.translated(-1.0, 0.0, -1.0)
+        }
+        dir === Direction.WEST -> {
+            GlStateManager.rotated(-270.0, 0.0, 1.0, 0.0)
+            GlStateManager.translated(-1.0, 0.0, 0.0)
+        }
     }
 }
