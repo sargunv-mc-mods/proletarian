@@ -146,7 +146,7 @@ class CraftTask : Task<VillagerEntity>(BASE_DELAY) {
     }
 
     override fun run(world: ServerWorld, villager: VillagerEntity, time: Long) {
-        val delay = if (villager.hasPotionEffect(StatusEffects.SPEED)) BASE_DELAY else BASE_DELAY * 2
+        val delay = if (villager.hasStatusEffect(StatusEffects.SPEED)) BASE_DELAY else BASE_DELAY * 2
         nextCraftTime = time + delay * 2
 
         if (!targetStation.hasUsableRecipe())

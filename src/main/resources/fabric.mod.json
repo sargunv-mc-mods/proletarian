@@ -21,7 +21,6 @@
         }
     },
     "mixins": {
-        "client": "proletarian.client.json",
         "common": "proletarian.common.json"
     }
 }
