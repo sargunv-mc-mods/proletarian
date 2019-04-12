@@ -7,7 +7,8 @@
         "CraftingResultSlotAccess",
         "CraftingTableContainerMixin",
         "SlotAccess",
-        "VillagerTaskListProviderMixin"
+        "VillagerTaskListProviderMixin",
+        "PointOfInterestTypeAccess"
     ],
     "injectors": {
         "defaultRequire": 1
