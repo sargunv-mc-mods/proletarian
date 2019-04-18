@@ -10,7 +10,7 @@ import java.util.Map;
 @Mixin(PointOfInterestType.class)
 public interface PointOfInterestTypeAccess {
 
-    @Accessor(value = "field_18849")
+    @Accessor(value = "BLOCK_STATE_TO_POINT_OF_INTEREST_TYPE")
     static Map<BlockState, PointOfInterestType> getStatePoiMap() {
         throw new IllegalStateException();
     }

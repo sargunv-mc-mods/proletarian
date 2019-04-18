@@ -13,9 +13,9 @@ import net.minecraft.entity.passive.VillagerEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.recipe.RecipeType
 import net.minecraft.server.world.ServerWorld
-import net.minecraft.sortme.ItemScatterer
 import net.minecraft.sound.SoundEvents
 import net.minecraft.util.DefaultedList
+import net.minecraft.util.ItemScatterer
 
 class CraftTask : Task<VillagerEntity>(BASE_DELAY) {
 

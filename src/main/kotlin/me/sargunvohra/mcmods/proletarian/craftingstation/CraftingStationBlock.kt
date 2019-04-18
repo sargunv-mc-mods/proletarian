@@ -12,11 +12,11 @@ import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemPlacementContext
 import net.minecraft.item.ItemStack
-import net.minecraft.sortme.ItemScatterer
 import net.minecraft.sound.BlockSoundGroup
 import net.minecraft.state.StateFactory
 import net.minecraft.state.property.Properties
 import net.minecraft.util.Hand
+import net.minecraft.util.ItemScatterer
 import net.minecraft.util.Mirror
 import net.minecraft.util.Rotation
 import net.minecraft.util.hit.BlockHitResult

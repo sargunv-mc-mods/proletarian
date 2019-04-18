@@ -18,8 +18,8 @@ import java.util.ArrayList;
 @Mixin(VillagerTaskListProvider.class)
 public class VillagerTaskListProviderMixin {
 
-    @Inject(method = "getWorkTasks", at = @At("RETURN"), cancellable = true)
-    private static void getWorkTasks(
+    @Inject(method = "createWorkTasks", at = @At("RETURN"), cancellable = true)
+    private static void injectCraftTaskIntoWorkTasks(
             VillagerProfession profession,
             float speed,
             CallbackInfoReturnable<ImmutableList<Pair<Integer, ? extends Task<? super VillagerEntity>>>> cir) {
