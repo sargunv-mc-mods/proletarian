@@ -11,6 +11,9 @@ import net.minecraft.state.property.Properties
 
 object CraftingStationRenderer : BlockEntityRenderer<CraftingStationBlockEntity>() {
 
+    private val slotIndices = (0 until 9)
+    private val itemRenderer = MinecraftClient.getInstance().itemRenderer
+
     override fun render(
         entity: CraftingStationBlockEntity,
         x: Double,
@@ -29,33 +32,31 @@ object CraftingStationRenderer : BlockEntityRenderer<CraftingStationBlockEntity>
         GlStateManager.disableRescaleNormal()
 
         entity.world?.getBlockState(entity.pos)?.let { state ->
-            if (state.block is CraftingStationBlock) {
-                rotateRenderState(state.get(Properties.FACING_HORIZONTAL))
+            rotateRenderState(state.get(Properties.FACING_HORIZONTAL))
 
-                (0 until 9)
-                    .map { slot -> slot to entity.craftingInv.getInvStack(slot) }
-                    .filter { (_, stack) -> !stack.isEmpty }
-                    .forEach { (slot, stack) ->
-                        val row = slot % 3
-                        val col = slot / 3
+            for (slot in slotIndices) {
+                val stack = entity.craftingInv.getInvStack(slot)
+                if (stack.isEmpty) continue
 
-                        GlStateManager.pushMatrix()
-                        GuiLighting.enable()
-                        GlStateManager.enableLighting()
-                        GlStateManager.translated(.69 - .19 * row, 1.07, .69 - .19 * col)
+                val row = slot % 3
+                val col = slot / 3
 
-                        if (MinecraftClient.getInstance().itemRenderer.getModel(stack).hasDepthInGui()) {
-                            GlStateManager.rotated(-90.0, 0.0, 1.0, 0.0)
-                        } else {
-                            GlStateManager.translated(0.0, -0.064, 0.0)
-                            GlStateManager.rotated(90.0, 1.0, 0.0, 0.0)
-                            GlStateManager.rotated(180.0, 0.0, 1.0, 0.0)
-                        }
+                GlStateManager.pushMatrix()
+                GuiLighting.enable()
+                GlStateManager.enableLighting()
+                GlStateManager.translated(.69 - .19 * row, 1.07, .69 - .19 * col)
 
-                        GlStateManager.scaled(.14, .14, .14)
-                        MinecraftClient.getInstance().itemRenderer.renderItem(stack, ModelTransformation.Type.NONE)
-                        GlStateManager.popMatrix()
-                    }
+                if (itemRenderer.getModel(stack).hasDepthInGui()) {
+                    GlStateManager.rotated(-90.0, 0.0, 1.0, 0.0)
+                } else {
+                    GlStateManager.translated(0.0, -0.064, 0.0)
+                    GlStateManager.rotated(90.0, 1.0, 0.0, 0.0)
+                    GlStateManager.rotated(180.0, 0.0, 1.0, 0.0)
+                }
+
+                GlStateManager.scaled(.14, .14, .14)
+                itemRenderer.renderItem(stack, ModelTransformation.Type.NONE)
+                GlStateManager.popMatrix()
             }
         }
 
