@@ -36,6 +36,6 @@
     "requires": {
         "fabricloader": ">=0.4.0",
         "fabric": "*",
-        "fabric-language-kotlin": ">=1.3.21"
+        "fabric-language-kotlin": ">=1.3.30"
     }
 }

@@ -15,10 +15,10 @@ import net.minecraft.item.ItemStack
 import net.minecraft.sound.BlockSoundGroup
 import net.minecraft.state.StateFactory
 import net.minecraft.state.property.Properties
+import net.minecraft.util.BlockMirror
+import net.minecraft.util.BlockRotation
 import net.minecraft.util.Hand
 import net.minecraft.util.ItemScatterer
-import net.minecraft.util.Mirror
-import net.minecraft.util.Rotation
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
@@ -41,14 +41,14 @@ object CraftingStationBlock : BlockWithEntity(
     override fun getPlacementState(context: ItemPlacementContext) =
         defaultState.with(Properties.FACING_HORIZONTAL, context.playerHorizontalFacing.opposite)!!
 
-    override fun rotate(state: BlockState, rotation: Rotation) =
+    override fun rotate(state: BlockState, rotation: BlockRotation) =
         state.with(Properties.FACING_HORIZONTAL, rotation.rotate(state.get(Properties.FACING_HORIZONTAL)))!!
 
-    override fun mirror(state: BlockState, mirror: Mirror) =
+    override fun mirror(state: BlockState, mirror: BlockMirror) =
         state.rotate(mirror.getRotation(state.get(Properties.FACING_HORIZONTAL)))!!
 
     override fun appendProperties(stateFactoryBuilder: StateFactory.Builder<Block, BlockState>) {
-        stateFactoryBuilder.with(Properties.FACING_HORIZONTAL)
+        stateFactoryBuilder.add(Properties.FACING_HORIZONTAL)
     }
 
     override fun createBlockEntity(blockView: BlockView) = CraftingStationBlockEntity()

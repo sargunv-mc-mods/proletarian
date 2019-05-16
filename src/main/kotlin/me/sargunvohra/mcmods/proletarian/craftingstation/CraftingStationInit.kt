@@ -9,19 +9,21 @@ import net.minecraft.client.gui.container.ContainerScreen54
 import net.minecraft.client.gui.container.CraftingTableScreen
 import net.minecraft.container.BlockContext
 import net.minecraft.container.GenericContainer
+import net.minecraft.item.BlockItem
 import net.minecraft.item.Item
 import net.minecraft.item.ItemGroup
-import net.minecraft.item.BlockItem
 import net.minecraft.util.registry.Registry
+import java.util.function.Supplier
 
 object CraftingStationInit {
 
     private val ID = id("crafting_station")
     val CRAFTING_ID = id("crafting_station_crafting_container")
     val STORAGE_ID = id("crafting_station_storage_container")
-    val BLOCK_ENTITY_TYPE = BlockEntityType.Builder.create {
-        CraftingStationBlockEntity()
-    }.build(null)!!
+    val BLOCK_ENTITY_TYPE = BlockEntityType.Builder.create(
+        Supplier { CraftingStationBlockEntity() },
+        CraftingStationBlock
+    ).build(null)!!
 
     fun register() {
         Registry.register(Registry.BLOCK, ID, CraftingStationBlock)

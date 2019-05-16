@@ -1,6 +1,5 @@
 package me.sargunvohra.mcmods.proletarian.profession
 
-import com.mojang.datafixers.util.Pair
 import me.sargunvohra.mcmods.proletarian.canMergeWith
 import me.sargunvohra.mcmods.proletarian.craftingstation.CraftingStationBlockEntity
 import me.sargunvohra.mcmods.proletarian.neighbors
@@ -17,21 +16,17 @@ import net.minecraft.sound.SoundEvents
 import net.minecraft.util.DefaultedList
 import net.minecraft.util.ItemScatterer
 
-class CraftTask : Task<VillagerEntity>(BASE_DELAY) {
+class CraftTask : Task<VillagerEntity>(
+    mapOf(
+        MemoryModuleType.LOOK_TARGET to MemoryModuleState.REGISTERED,
+        MemoryModuleType.WALK_TARGET to MemoryModuleState.VALUE_ABSENT,
+        MemoryModuleType.JOB_SITE to MemoryModuleState.VALUE_PRESENT
+    ),
+    BASE_DELAY
+) {
 
     private var nextCraftTime = 0L
     private lateinit var targetStation: CraftingStationBlockEntity
-
-    private fun memoryStatePair(type: MemoryModuleType<*>, state: MemoryModuleState) =
-        Pair.of(type, state)
-
-    override fun getRequiredMemoryState(): Set<Pair<MemoryModuleType<*>, MemoryModuleState>> {
-        return setOf(
-            memoryStatePair(MemoryModuleType.LOOK_TARGET, MemoryModuleState.REGISTERED),
-            memoryStatePair(MemoryModuleType.WALK_TARGET, MemoryModuleState.VALUE_ABSENT),
-            memoryStatePair(MemoryModuleType.JOB_SITE, MemoryModuleState.VALUE_PRESENT)
-        )
-    }
 
     override fun shouldRun(world: ServerWorld, villager: VillagerEntity): Boolean {
         // apply cool-down time

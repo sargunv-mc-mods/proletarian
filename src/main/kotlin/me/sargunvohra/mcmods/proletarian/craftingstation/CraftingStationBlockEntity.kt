@@ -8,8 +8,8 @@ import net.minecraft.inventory.BasicInventory
 import net.minecraft.inventory.CraftingInventory
 import net.minecraft.inventory.Inventory
 import net.minecraft.nbt.CompoundTag
-import net.minecraft.text.TextComponent
-import net.minecraft.text.TranslatableTextComponent
+import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.TranslatableComponent
 
 class CraftingStationBlockEntity(
     val craftingInv: CraftingInventory = CraftingInventory(null, 3, 3),
@@ -19,9 +19,9 @@ class CraftingStationBlockEntity(
     Inventory by internalInv,
     BlockEntityClientSerializable {
 
-    var customName: TextComponent? = null
+    var customName: Component? = null
     val name
-        get() = customName ?: TranslatableTextComponent("container.proletarian.crafting_station")
+        get() = customName ?: TranslatableComponent("container.proletarian.crafting_station")
 
     override fun toClientTag(tag: CompoundTag): CompoundTag {
         return toTag(tag)
