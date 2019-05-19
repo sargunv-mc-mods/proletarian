@@ -46,7 +46,7 @@ object CraftingStationRenderer : BlockEntityRenderer<CraftingStationBlockEntity>
                 GlStateManager.enableLighting()
                 GlStateManager.translated(.69 - .19 * row, 1.07, .69 - .19 * col)
 
-gi                if (itemRenderer.getModel(stack).hasDepthInGui()) {
+                if (itemRenderer.getModel(stack).hasDepthInGui()) {
                     GlStateManager.rotated(-90.0, 0.0, 1.0, 0.0)
                 } else {
                     GlStateManager.translated(0.0, -0.064, 0.0)
