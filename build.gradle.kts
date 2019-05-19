@@ -63,10 +63,8 @@ dependencies {
     modCompile("net.fabricmc:fabric-loader:0.4.+")
 
     modCompile("net.fabricmc.fabric-api:fabric-api:0.3.+")
-
     modCompile("net.fabricmc:fabric-language-kotlin:1.3.+")
     compileOnly(kotlin("stdlib-jdk8", "1.3.30"))
-    include("net.fabricmc:fabric-language-kotlin:1.3.+")
 }
 
 val processResources = tasks.getByName<ProcessResources>("processResources") {
