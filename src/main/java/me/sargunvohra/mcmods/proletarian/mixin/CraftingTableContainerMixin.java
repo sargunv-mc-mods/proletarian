@@ -24,13 +24,13 @@ public abstract class CraftingTableContainerMixin
     }
 
     @Override
-    public void setCraftingInventory(CraftingInventory value) {
+    public void proletarian_setCraftingInventory(CraftingInventory value) {
         for (Slot slot : slotList) {
             if (slot.inventory == craftingInv) {
-                ((SlotAccess) slot).setInventory(value);
+                ((SlotAccess) slot).proletarian_setInventory(value);
             }
             if (slot instanceof CraftingResultSlot) {
-                ((CraftingResultSlotAccess) slot).setCraftingInv(value);
+                ((CraftingResultSlotAccess) slot).proletarian_setCraftingInv(value);
             }
         }
         this.craftingInv = value;

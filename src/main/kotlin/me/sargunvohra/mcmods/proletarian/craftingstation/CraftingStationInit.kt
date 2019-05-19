@@ -5,8 +5,8 @@ import net.fabricmc.fabric.api.client.render.BlockEntityRendererRegistry
 import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry
 import net.minecraft.block.entity.BlockEntityType
-import net.minecraft.client.gui.container.ContainerScreen54
-import net.minecraft.client.gui.container.CraftingTableScreen
+import net.minecraft.client.gui.screen.ingame.ContainerScreen54
+import net.minecraft.client.gui.screen.ingame.CraftingTableScreen
 import net.minecraft.container.BlockContext
 import net.minecraft.container.GenericContainer
 import net.minecraft.item.BlockItem

@@ -23,7 +23,7 @@ public abstract class CraftingInventoryMixin implements Inventory, RecipeInputPr
     private Container container;
 
     @Override
-    public void setContainer(Container newContainer) {
+    public void proletarian_setContainer(Container newContainer) {
         this.container = newContainer;
         if (this.container != null) {
             this.container.onContentChanged(this);

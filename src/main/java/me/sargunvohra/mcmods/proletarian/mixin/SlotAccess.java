@@ -8,6 +8,6 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(Slot.class)
 public interface SlotAccess {
 
-    @Accessor
-    void setInventory(Inventory newInventory);
+    @Accessor(value = "inventory")
+    void proletarian_setInventory(Inventory newInventory);
 }

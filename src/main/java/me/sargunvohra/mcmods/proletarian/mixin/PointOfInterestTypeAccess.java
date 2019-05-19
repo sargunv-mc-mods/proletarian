@@ -11,7 +11,7 @@ import java.util.Map;
 public interface PointOfInterestTypeAccess {
 
     @Accessor(value = "BLOCK_STATE_TO_POINT_OF_INTEREST_TYPE")
-    static Map<BlockState, PointOfInterestType> getStatePoiMap() {
+    static Map<BlockState, PointOfInterestType> proletarian_getStatePoiMap() {
         throw new IllegalStateException();
     }
 }

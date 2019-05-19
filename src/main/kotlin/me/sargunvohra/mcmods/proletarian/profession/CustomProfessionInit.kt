@@ -28,7 +28,7 @@ object CustomProfessionInit {
 
     fun register() {
         CraftingStationBlock.stateFactory.states.forEach {
-            PointOfInterestTypeAccess.getStatePoiMap()[it] = poiType
+            PointOfInterestTypeAccess.proletarian_getStatePoiMap()[it] = poiType
         }
         Registry.register(Registry.POINT_OF_INTEREST_TYPE, poiId, poiType)
         Registry.register(Registry.VILLAGER_PROFESSION, professionId, profession)

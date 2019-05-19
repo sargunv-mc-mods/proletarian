@@ -6,21 +6,10 @@ import net.fabricmc.loom.task.RemapJar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val minecraftVersion: String by project
-val yarnMappings: String by project
-val loaderVersion: String by project
-
 val curseProjectId: String by project
 val curseMinecraftVersion: String by project
-val basePackage: String by project
 val modJarBaseName: String by project
 val modMavenGroup: String by project
-
-val fabricVersion: String by project
-val fabricKotlinVersion: String by project
-val clothConfigVersion: String by project
-val autoConfigVersion: String by project
-val cottonVersion: String by project
-val modMenuVersion: String by project
 
 plugins {
     java
@@ -49,10 +38,6 @@ repositories {
     mavenCentral()
     jcenter()
     maven(url = "http://maven.fabricmc.net")
-    maven(url = "https://minecraft.curseforge.com/api/maven")
-    maven(url = "http://maven.sargunv.s3-website-us-west-2.amazonaws.com/")
-    maven(url = "https://maven.fabricmc.net/io/github/prospector/modmenu/ModMenu/")
-    maven(url = "http://server.bbkr.space:8081/artifactory/libs-snapshot/")
 }
 
 val gitVersion: groovy.lang.Closure<Any> by extra
@@ -64,41 +49,24 @@ group = modMavenGroup
 minecraft {
 }
 
+configurations {
+    listOf(mappings, modCompile, include, compileOnly).forEach {
+        it {
+            resolutionStrategy.activateDependencyLocking()
+        }
+    }
+}
+
 dependencies {
     minecraft("com.mojang:minecraft:$minecraftVersion")
-    mappings("net.fabricmc:yarn:$minecraftVersion+$yarnMappings")
-    modCompile("net.fabricmc:fabric-loader:$loaderVersion")
+    mappings("net.fabricmc:yarn:$minecraftVersion+")
+    modCompile("net.fabricmc:fabric-loader:0.4.+")
 
-    modCompile("net.fabricmc.fabric-api:fabric-api-base:$fabricVersion")
-    include("net.fabricmc.fabric-api:fabric-api-base:$fabricVersion")
+    modCompile("net.fabricmc.fabric-api:fabric-api:0.3.+")
 
-    modCompile("net.fabricmc.fabric-api:fabric-resource-loader-v0:$fabricVersion")
-    include("net.fabricmc.fabric-api:fabric-resource-loader-v0:$fabricVersion")
-
-    modCompile("net.fabricmc.fabric-api:fabric-object-builders-v0:$fabricVersion")
-    include("net.fabricmc.fabric-api:fabric-object-builders-v0:$fabricVersion")
-
-    modCompile("net.fabricmc.fabric-api:fabric-item-groups-v0:$fabricVersion")
-    include("net.fabricmc.fabric-api:fabric-item-groups-v0:$fabricVersion")
-
-    modCompile("net.fabricmc.fabric-api:fabric-registry-sync-v0:$fabricVersion")
-    include("net.fabricmc.fabric-api:fabric-registry-sync-v0:$fabricVersion")
-
-    modCompile("net.fabricmc.fabric-api:fabric-networking-v0:$fabricVersion")
-    include("net.fabricmc.fabric-api:fabric-networking-v0:$fabricVersion")
-
-    modCompile("net.fabricmc.fabric-api:fabric-containers-v0:$fabricVersion")
-    include("net.fabricmc.fabric-api:fabric-containers-v0:$fabricVersion")
-
-    modCompile("net.fabricmc.fabric-api:fabric-rendering-v0:$fabricVersion")
-    include("net.fabricmc.fabric-api:fabric-rendering-v0:$fabricVersion")
-
-    modCompile("net.fabricmc.fabric-api:fabric-networking-blockentity-v0:$fabricVersion")
-    include("net.fabricmc.fabric-api:fabric-networking-blockentity-v0:$fabricVersion")
-
-    modCompile("net.fabricmc:fabric-language-kotlin:$fabricKotlinVersion")
+    modCompile("net.fabricmc:fabric-language-kotlin:1.3.+")
     compileOnly(kotlin("stdlib-jdk8", "1.3.30"))
-    include("net.fabricmc:fabric-language-kotlin:$fabricKotlinVersion")
+    include("net.fabricmc:fabric-language-kotlin:1.3.+")
 }
 
 val processResources = tasks.getByName<ProcessResources>("processResources") {
@@ -137,8 +105,8 @@ if (versionDetails().isCleanTag) {
             releaseType = "release"
             addGameVersion(curseMinecraftVersion)
             relations(closureOf<CurseRelation>{
-                embeddedLibrary("fabric")
-                embeddedLibrary("fabric-language-kotlin")
+                requiredDependency("fabric")
+                requiredDependency("fabric-language-kotlin")
             })
         })
 

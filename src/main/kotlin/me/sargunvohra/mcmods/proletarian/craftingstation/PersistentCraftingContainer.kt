@@ -21,8 +21,8 @@ class PersistentCraftingContainer(
 
     init {
         @Suppress("CAST_NEVER_SUCCEEDS")
-        (this as ModifiedCraftingTableContainer).setCraftingInventory(craftingInv)
-        (craftingInv as ModifiedCraftingInventory).setContainer(this)
+        (this as ModifiedCraftingTableContainer).proletarian_setCraftingInventory(craftingInv)
+        (craftingInv as ModifiedCraftingInventory).proletarian_setContainer(this)
     }
 
     override fun onContentChanged(inventory: Inventory) {
@@ -43,7 +43,7 @@ class PersistentCraftingContainer(
             playerInv.cursorStack = ItemStack.EMPTY
         }
 
-        (craftingInv as ModifiedCraftingInventory).setContainer(null)
+        (craftingInv as ModifiedCraftingInventory).proletarian_setContainer(null)
     }
 
     override fun canUse(player: PlayerEntity) =

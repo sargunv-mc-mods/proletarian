@@ -12,7 +12,6 @@ import net.minecraft.state.property.Properties
 object CraftingStationRenderer : BlockEntityRenderer<CraftingStationBlockEntity>() {
 
     private val slotIndices = (0 until 9)
-    private val itemRenderer = MinecraftClient.getInstance().itemRenderer
 
     override fun render(
         entity: CraftingStationBlockEntity,
@@ -23,6 +22,7 @@ object CraftingStationRenderer : BlockEntityRenderer<CraftingStationBlockEntity>
         destroyStage: Int
     ) {
         super.render(entity, x, y, z, partialTicks, destroyStage)
+        val itemRenderer = MinecraftClient.getInstance().itemRenderer
 
         val lightmapIndex = this.world.getLightmapIndex(entity.pos.up(), 0)
         GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, (lightmapIndex % 65536).toFloat(), (lightmapIndex / 65536).toFloat())
@@ -46,7 +46,7 @@ object CraftingStationRenderer : BlockEntityRenderer<CraftingStationBlockEntity>
                 GlStateManager.enableLighting()
                 GlStateManager.translated(.69 - .19 * row, 1.07, .69 - .19 * col)
 
-                if (itemRenderer.getModel(stack).hasDepthInGui()) {
+gi                if (itemRenderer.getModel(stack).hasDepthInGui()) {
                     GlStateManager.rotated(-90.0, 0.0, 1.0, 0.0)
                 } else {
                     GlStateManager.translated(0.0, -0.064, 0.0)
