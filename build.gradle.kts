@@ -2,7 +2,7 @@ import com.matthewprenger.cursegradle.CurseProject
 import com.matthewprenger.cursegradle.CurseRelation
 import com.matthewprenger.cursegradle.Options
 import com.palantir.gradle.gitversion.VersionDetails
-import net.fabricmc.loom.task.RemapJar
+import net.fabricmc.loom.task.RemapJarTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val minecraftVersion: String by project
@@ -16,7 +16,7 @@ plugins {
     kotlin("jvm") version "1.3.30"
     idea
     `maven-publish`
-    id("fabric-loom") version "0.2.2-SNAPSHOT"
+    id("fabric-loom") version "0.2.3-SNAPSHOT"
     id("com.palantir.git-version") version "0.11.0"
     id("com.matthewprenger.cursegradle") version "1.2.0"
 }
@@ -50,7 +50,7 @@ minecraft {
 }
 
 configurations {
-    listOf(mappings, modCompile, include, compileOnly).forEach {
+    listOf(mappings, modCompile).forEach {
         it {
             resolutionStrategy.activateDependencyLocking()
         }
@@ -62,9 +62,8 @@ dependencies {
     mappings("net.fabricmc:yarn:$minecraftVersion+")
     modCompile("net.fabricmc:fabric-loader:0.4.+")
 
-    modCompile("net.fabricmc.fabric-api:fabric-api:0.3.+")
+    modCompile("net.fabricmc.fabric-api:fabric-api:0.3.0-pre+build.157")
     modCompile("net.fabricmc:fabric-language-kotlin:1.3.+")
-    compileOnly(kotlin("stdlib-jdk8", "1.3.30"))
 }
 
 val processResources = tasks.getByName<ProcessResources>("processResources") {
@@ -88,7 +87,7 @@ val jar = tasks.getByName<Jar>("jar") {
     from("LICENSE")
 }
 
-val remapJar = tasks.getByName<RemapJar>("remapJar")
+val remapJar = tasks.getByName<RemapJarTask>("remapJar")
 
 if (versionDetails().isCleanTag) {
 
@@ -106,15 +105,15 @@ if (versionDetails().isCleanTag) {
                 requiredDependency("fabric")
                 requiredDependency("fabric-language-kotlin")
             })
+            mainArtifact(file("${project.buildDir}/libs/${base.archivesBaseName}-$version.jar"))
+            afterEvaluate {
+                uploadTask.dependsOn(remapJar)
+            }
         })
 
         options(closureOf<Options> {
             forgeGradleIntegration = false
         })
-    }
-
-    afterEvaluate {
-        tasks.getByName("curseforge$curseProjectId").dependsOn(remapJar)
     }
 
 }
