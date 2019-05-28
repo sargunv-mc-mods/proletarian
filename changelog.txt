@@ -1,1 +1,3 @@
-debundle fabric api and kotlin
+* MC 1.14.2
+* Fix absence of recipe advancement
+* Fix absence of zombie villager texture
