@@ -29,7 +29,7 @@ object CraftingStationInit {
         Registry.register(Registry.BLOCK, ID, CraftingStationBlock)
 
         Registry.register(
-            Registry.ITEM, ID, BlockItem(CraftingStationBlock, Item.Settings().itemGroup(ItemGroup.DECORATIONS)))
+            Registry.ITEM, ID, BlockItem(CraftingStationBlock, Item.Settings().group(ItemGroup.DECORATIONS)))
 
         Registry.register(Registry.BLOCK_ENTITY, ID, BLOCK_ENTITY_TYPE)
 
@@ -65,7 +65,7 @@ object CraftingStationInit {
                     BlockContext.create(player.world, pos)
                 ),
                 player.inventory,
-                buf.readTextComponent()
+                buf.readText()
             )
         }
 
@@ -75,7 +75,7 @@ object CraftingStationInit {
             ContainerScreen54(
                 GenericContainer.createGeneric9x3(syncId, player.inventory, entity),
                 player.inventory,
-                buf.readTextComponent()
+                buf.readText()
             )
         }
     }

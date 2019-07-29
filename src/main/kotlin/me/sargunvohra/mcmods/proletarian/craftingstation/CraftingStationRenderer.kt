@@ -32,7 +32,7 @@ object CraftingStationRenderer : BlockEntityRenderer<CraftingStationBlockEntity>
         GlStateManager.disableRescaleNormal()
 
         entity.world?.getBlockState(entity.pos)?.let { state ->
-            rotateRenderState(state.get(Properties.FACING_HORIZONTAL))
+            rotateRenderState(state.get(Properties.HORIZONTAL_FACING))
 
             for (slot in slotIndices) {
                 val stack = entity.craftingInv.getInvStack(slot)

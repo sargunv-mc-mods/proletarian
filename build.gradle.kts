@@ -13,7 +13,7 @@ val modMavenGroup: String by project
 
 plugins {
     java
-    kotlin("jvm") version "1.3.30"
+    kotlin("jvm") version "1.3.40"
     idea
     `maven-publish`
     id("fabric-loom") version "0.2.3-SNAPSHOT"
@@ -59,11 +59,11 @@ configurations {
 
 dependencies {
     minecraft("com.mojang:minecraft:$minecraftVersion")
-    mappings("net.fabricmc:yarn:$minecraftVersion+")
-    modCompile("net.fabricmc:fabric-loader:0.4.+")
+    mappings("net.fabricmc:yarn:$minecraftVersion+build.3")
+    modCompile("net.fabricmc:fabric-loader:0.4.8+")
 
-    modCompile("net.fabricmc.fabric-api:fabric-api:0.3.0-pre+build.157")
-    modCompile("net.fabricmc:fabric-language-kotlin:1.3.+")
+    modCompile("net.fabricmc.fabric-api:fabric-api:0.3.0+build.206")
+    modCompile("net.fabricmc:fabric-language-kotlin:1.3.40+")
 }
 
 val processResources = tasks.getByName<ProcessResources>("processResources") {
@@ -102,7 +102,7 @@ if (versionDetails().isCleanTag) {
             releaseType = "release"
             addGameVersion(curseMinecraftVersion)
             relations(closureOf<CurseRelation>{
-                requiredDependency("fabric")
+                requiredDependency("fabric-api")
                 requiredDependency("fabric-language-kotlin")
             })
             mainArtifact(file("${project.buildDir}/libs/${base.archivesBaseName}-$version.jar"))

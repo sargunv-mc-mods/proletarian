@@ -60,7 +60,7 @@ class PersistentCraftingContainer(
 
             when (slotIndex) {
                 craftingResultSlotIndex -> {
-                    worldPos.run { world, _ -> slotStack.item.onCrafted(slotStack, world, player) }
+                    worldPos.run { world, _ -> slotStack.item.onCraft(slotStack, world, player) }
                     if (!insertItem(slotStack, playerIndices.first, playerIndices.last + 1, true)) {
                         return ItemStack.EMPTY
                     }
@@ -80,7 +80,7 @@ class PersistentCraftingContainer(
                 slot.markDirty()
             }
 
-            if (slotStack.amount == original.amount) {
+            if (slotStack.count == original.count) {
                 return ItemStack.EMPTY
             }
 

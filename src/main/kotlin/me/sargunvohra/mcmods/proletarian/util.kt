@@ -27,11 +27,11 @@ fun <T : Any> construct(`class`: KClass<T>, vararg args: Any?): T {
 
 fun Inventory.invToTag(tag: CompoundTag): CompoundTag {
     val items = (0 until invSize).map { i -> getInvStack(i) }.toTypedArray()
-    return Inventories.toTag(tag, DefaultedList.create(ItemStack.EMPTY, *items))
+    return Inventories.toTag(tag, DefaultedList.copyOf(ItemStack.EMPTY, *items))
 }
 
 fun Inventory.invFromTag(tag: CompoundTag) {
-    val savedContent = DefaultedList.create(invSize, ItemStack.EMPTY)
+    val savedContent = DefaultedList.ofSize(invSize, ItemStack.EMPTY)
     Inventories.fromTag(tag, savedContent)
     savedContent.forEachIndexed(this::setInvStack)
 }
@@ -42,7 +42,7 @@ fun ItemStack.canMergeWith(other: ItemStack): Boolean {
     return when {
         item !== other.item -> false
         damage != other.damage -> false
-        amount > maxAmount -> false
+        count > maxCount -> false
         else -> ItemStack.areTagsEqual(this, other)
     }
 }

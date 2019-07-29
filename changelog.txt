@@ -1,3 +1,1 @@
-* MC 1.14.2
-* Fix absence of recipe advancement
-* Fix absence of zombie villager texture
+Updated to MC 1.14.4

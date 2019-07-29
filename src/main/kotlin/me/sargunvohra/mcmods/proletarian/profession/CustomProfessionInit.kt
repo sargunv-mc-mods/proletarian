@@ -19,7 +19,11 @@ object CustomProfessionInit {
 
     private val poiType = construct(
         PointOfInterestType::class,
-        poiId.toString(), ImmutableSet.copyOf(CraftingStationBlock.stateFactory.states), 1, SoundEvents.ENTITY_VILLAGER_WORK_TOOLSMITH
+        poiId.toString(),
+        ImmutableSet.copyOf(CraftingStationBlock.stateFactory.states),
+        1, // ticketCount
+        SoundEvents.ENTITY_VILLAGER_WORK_TOOLSMITH,
+        1 // ???
     )
     val profession = construct(
         VillagerProfession::class,

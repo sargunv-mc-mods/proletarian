@@ -15,6 +15,7 @@ import net.minecraft.server.world.ServerWorld
 import net.minecraft.sound.SoundEvents
 import net.minecraft.util.DefaultedList
 import net.minecraft.util.ItemScatterer
+import net.minecraft.world.GameRules
 
 class CraftTask : Task<VillagerEntity>(
     mapOf(
@@ -38,7 +39,7 @@ class CraftTask : Task<VillagerEntity>(
             return false
 
         // we are allowed to interact with the world
-        if (!world.gameRules.getBoolean("mobGriefing"))
+        if (!world.gameRules.getBoolean(GameRules.MOB_GRIEFING))
             return false
 
         // we are at our job site
@@ -75,7 +76,7 @@ class CraftTask : Task<VillagerEntity>(
         // are the ingredients stackable
         for (i in 0 until craftingInv.invSize) {
             val stack = craftingInv.getInvStack(i)
-            if (!stack.isEmpty && !stack.canStack())
+            if (!stack.isEmpty && !stack.isStackable)
                 return false
         }
 
@@ -96,7 +97,7 @@ class CraftTask : Task<VillagerEntity>(
             if (stack.isEmpty) continue
 
             // if we find a stack of one, make it two using an item from the internal inventory
-            if (stack.amount <= 1) {
+            if (stack.count <= 1) {
 
                 // search the internal inventory
                 for (internalIndex in 0 until invSize) {
@@ -104,7 +105,7 @@ class CraftTask : Task<VillagerEntity>(
                     // if found one that can merge, pull it out and merge it
                     if (stack.canMergeWith(getInvStack(internalIndex))) {
                         takeInvStack(internalIndex, 1)
-                        stack.addAmount(1)
+                        stack.increment(1)
                         return InsertResult.INSERTED
                     }
                 }
@@ -118,21 +119,21 @@ class CraftTask : Task<VillagerEntity>(
         return InsertResult.COMPLETED
     }
 
-    private fun CraftingStationBlockEntity.craft(): kotlin.Pair<ItemStack, DefaultedList<ItemStack>> {
+    private fun CraftingStationBlockEntity.craft(): Pair<ItemStack, DefaultedList<ItemStack>> {
         val recipe = getCurrentRecipe()!!
 
         // create result
-        val resultAndRemaining = kotlin.Pair(
+        val resultAndRemaining = Pair(
             recipe.craft(craftingInv),
             recipeManager?.getRemainingStacks(RecipeType.CRAFTING, craftingInv, world)
-                ?: DefaultedList.create()
+                ?: DefaultedList.of()
         )
 
         // use up ingredients
         for (craftingIndex in 0 until craftingInv.invSize) {
             val stack = craftingInv.getInvStack(craftingIndex)
             if (stack.isEmpty) continue
-            stack.addAmount(-1)
+            stack.increment(-1)
         }
 
         markDirty()

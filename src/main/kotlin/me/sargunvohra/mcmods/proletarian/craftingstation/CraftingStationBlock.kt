@@ -35,20 +35,20 @@ object CraftingStationBlock : BlockWithEntity(
 ) {
 
     init {
-        defaultState = stateFactory.defaultState.with(Properties.FACING_HORIZONTAL, Direction.NORTH)
+        defaultState = stateFactory.defaultState.with(Properties.HORIZONTAL_FACING, Direction.NORTH)
     }
 
     override fun getPlacementState(context: ItemPlacementContext) =
-        defaultState.with(Properties.FACING_HORIZONTAL, context.playerHorizontalFacing.opposite)!!
+        defaultState.with(Properties.HORIZONTAL_FACING, context.playerFacing.opposite)!!
 
     override fun rotate(state: BlockState, rotation: BlockRotation) =
-        state.with(Properties.FACING_HORIZONTAL, rotation.rotate(state.get(Properties.FACING_HORIZONTAL)))!!
+        state.with(Properties.HORIZONTAL_FACING, rotation.rotate(state.get(Properties.HORIZONTAL_FACING)))!!
 
     override fun mirror(state: BlockState, mirror: BlockMirror) =
-        state.rotate(mirror.getRotation(state.get(Properties.FACING_HORIZONTAL)))!!
+        state.rotate(mirror.getRotation(state.get(Properties.HORIZONTAL_FACING)))!!
 
     override fun appendProperties(stateFactoryBuilder: StateFactory.Builder<Block, BlockState>) {
-        stateFactoryBuilder.add(Properties.FACING_HORIZONTAL)
+        stateFactoryBuilder.add(Properties.HORIZONTAL_FACING)
     }
 
     override fun createBlockEntity(blockView: BlockView) = CraftingStationBlockEntity()
@@ -71,7 +71,7 @@ object CraftingStationBlock : BlockWithEntity(
             if (entity is CraftingStationBlockEntity) {
                 ContainerProviderRegistry.INSTANCE.openContainer(container, player) {
                     it.writeBlockPos(pos)
-                    it.writeTextComponent(entity.name)
+                    it.writeText(entity.name)
                 }
             }
         }
@@ -86,10 +86,10 @@ object CraftingStationBlock : BlockWithEntity(
         placer: LivingEntity?,
         stack: ItemStack
     ) {
-        if (stack.hasDisplayName()) {
+        if (stack.hasCustomName()) {
             val entity = world.getBlockEntity(pos)
             if (entity is CraftingStationBlockEntity) {
-                entity.customName = stack.displayName
+                entity.customName = stack.name
             }
         }
     }
