@@ -18,7 +18,7 @@ plugins {
     `maven-publish`
     id("fabric-loom") version "0.2.3-SNAPSHOT"
     id("com.palantir.git-version") version "0.11.0"
-    id("com.matthewprenger.cursegradle") version "1.2.0"
+    id("com.matthewprenger.cursegradle") version "1.4.0"
 }
 
 java {
@@ -101,6 +101,7 @@ if (versionDetails().isCleanTag) {
             changelog = file("changelog.txt")
             releaseType = "release"
             addGameVersion(curseMinecraftVersion)
+            addGameVersion("Fabric")
             relations(closureOf<CurseRelation>{
                 requiredDependency("fabric-api")
                 requiredDependency("fabric-language-kotlin")
