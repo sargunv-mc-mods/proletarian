@@ -1,11 +1,10 @@
 package me.sargunvohra.mcmods.proletarian.craftingstation
 
+import me.sargunvohra.mcmods.proletarian.mixin.CraftingResultSlotAccess
+import me.sargunvohra.mcmods.proletarian.mixin.CraftingTableContainerAccess
+import me.sargunvohra.mcmods.proletarian.mixin.SlotAccess
 import me.sargunvohra.mcmods.proletarian.mixinapi.ModifiedCraftingInventory
-import me.sargunvohra.mcmods.proletarian.mixinapi.ModifiedCraftingTableContainer
-import net.minecraft.container.BlockContext
-import net.minecraft.container.Container
-import net.minecraft.container.CraftingTableContainer
-import net.minecraft.container.Slot
+import net.minecraft.container.*
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.CraftingInventory
@@ -21,7 +20,17 @@ class PersistentCraftingContainer(
 
     init {
         @Suppress("CAST_NEVER_SUCCEEDS")
-        (this as ModifiedCraftingTableContainer).proletarian_setCraftingInventory(craftingInv)
+        val access = this as CraftingTableContainerAccess
+        val currentCraftingInv = access.proletarian_getCraftingInventory()
+        for (slot in slotList) {
+            if (slot.inventory === currentCraftingInv) {
+                (slot as SlotAccess).proletarian_setInventory(craftingInv)
+            }
+            if (slot is CraftingResultSlot) {
+                (slot as CraftingResultSlotAccess).proletarian_setCraftingInv(craftingInv)
+            }
+        }
+        access.proletarian_setCraftingInventory(craftingInv)
         (craftingInv as ModifiedCraftingInventory).proletarian_setContainer(this)
     }
 
