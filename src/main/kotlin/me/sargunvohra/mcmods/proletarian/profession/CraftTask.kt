@@ -76,7 +76,7 @@ class CraftTask : Task<VillagerEntity>(
                     villager.brain.putMemory(CustomProfessionInit.lastPaidModule, Timestamp.of(villager.world.time))
                 }
             }
-            if (!hasEaten) {
+            if (!hasEaten && villager.world.time % 40 == 0L) {
                 villager.playSound(SoundEvents.ENTITY_VILLAGER_NO, 1f, 1f)
                 return false
             }
