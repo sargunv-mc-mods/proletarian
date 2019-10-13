@@ -1,6 +1,7 @@
 package me.sargunvohra.mcmods.proletarian.profession
 
 import com.google.common.collect.ImmutableSet
+import com.mojang.datafixers.Dynamic
 import me.sargunvohra.mcmods.proletarian.construct
 import me.sargunvohra.mcmods.proletarian.craftingstation.CraftingStationBlock
 import me.sargunvohra.mcmods.proletarian.id
@@ -35,8 +36,8 @@ object CustomProfessionInit {
     )
     val lastPaidModule = construct(
         MemoryModuleType::class,
-        Optional.of<Timestamp>(Timestamp::of)
-    )
+        Optional.of<Function<Timestamp>>(this::timestamp)
+    ) as MemoryModuleType<Timestamp>
 
     fun register() {
         CraftingStationBlock.stateFactory.states.forEach {
@@ -44,6 +45,10 @@ object CustomProfessionInit {
         }
         Registry.register(Registry.POINT_OF_INTEREST_TYPE, poiId, poiType)
         Registry.register(Registry.VILLAGER_PROFESSION, professionId, profession)
-        Registry.register(Registry.MEMORY_MODULE_TYPE, lastEatenModuleId, lastPaidModule);
+        Registry.register(Registry.MEMORY_MODULE_TYPE, lastEatenModuleId, lastPaidModule)
+    }
+
+    fun timestamp(dynamic: Dynamic<*>): Timestamp{
+        return Timestamp.of(dynamic)
     }
 }
