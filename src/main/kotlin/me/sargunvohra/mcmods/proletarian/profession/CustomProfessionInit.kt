@@ -36,7 +36,7 @@ object CustomProfessionInit {
     )
     val lastPaidModule = construct(
         MemoryModuleType::class,
-        Optional.of<Function<Timestamp>>(this::timestamp)
+        Optional.of<Function<Timestamp>> { dynamic:Dynamic<*> -> Timestamp.of(dynamic) }
     ) as MemoryModuleType<Timestamp>
 
     fun register() {
@@ -46,9 +46,5 @@ object CustomProfessionInit {
         Registry.register(Registry.POINT_OF_INTEREST_TYPE, poiId, poiType)
         Registry.register(Registry.VILLAGER_PROFESSION, professionId, profession)
         Registry.register(Registry.MEMORY_MODULE_TYPE, lastEatenModuleId, lastPaidModule)
-    }
-
-    fun timestamp(dynamic: Dynamic<*>): Timestamp{
-        return Timestamp.of(dynamic)
     }
 }
