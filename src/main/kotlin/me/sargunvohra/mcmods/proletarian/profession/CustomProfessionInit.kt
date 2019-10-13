@@ -1,9 +1,9 @@
 package me.sargunvohra.mcmods.proletarian.profession
 
 import com.google.common.collect.ImmutableSet
-import com.mojang.datafixers.Dynamic
 import me.sargunvohra.mcmods.proletarian.construct
 import me.sargunvohra.mcmods.proletarian.craftingstation.CraftingStationBlock
+import me.sargunvohra.mcmods.proletarian.hack.MemoryModuleHack
 import me.sargunvohra.mcmods.proletarian.id
 import me.sargunvohra.mcmods.proletarian.mixin.PointOfInterestTypeAccess
 import net.minecraft.block.Block
@@ -14,7 +14,6 @@ import net.minecraft.util.Timestamp
 import net.minecraft.util.registry.Registry
 import net.minecraft.village.PointOfInterestType
 import net.minecraft.village.VillagerProfession
-import java.util.*
 
 object CustomProfessionInit {
 
@@ -34,9 +33,9 @@ object CustomProfessionInit {
         VillagerProfession::class,
         professionId.toString(), poiType, ImmutableSet.of<Item>(), ImmutableSet.of<Block>()
     )
-    val lastPaidModule = construct(
+    val lastEatenModule = construct(
         MemoryModuleType::class,
-        Optional.of<Function<Timestamp>> { dynamic:Dynamic<*> -> Timestamp.of(dynamic) }
+        MemoryModuleHack.FED_MEMORY_MODULE
     ) as MemoryModuleType<Timestamp>
 
     fun register() {
@@ -45,6 +44,6 @@ object CustomProfessionInit {
         }
         Registry.register(Registry.POINT_OF_INTEREST_TYPE, poiId, poiType)
         Registry.register(Registry.VILLAGER_PROFESSION, professionId, profession)
-        Registry.register(Registry.MEMORY_MODULE_TYPE, lastEatenModuleId, lastPaidModule)
+        Registry.register(Registry.MEMORY_MODULE_TYPE, lastEatenModuleId, lastEatenModule)
     }
 }

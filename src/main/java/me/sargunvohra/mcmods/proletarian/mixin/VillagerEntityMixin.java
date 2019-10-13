@@ -39,6 +39,6 @@ public class VillagerEntityMixin {
                             MemoryModuleType.LAST_SLEPT,
                             MemoryModuleType.LAST_WORKED_AT_POI,
                             MemoryModuleType.GOLEM_LAST_SEEN_TIME,
-                            CustomProfessionInit.INSTANCE.getLastPaidModule()
+                            CustomProfessionInit.INSTANCE.getLastEatenModule()
             });
 }

@@ -23,8 +23,8 @@ class CraftTask : Task<VillagerEntity>(
     mapOf(
         MemoryModuleType.LOOK_TARGET to MemoryModuleState.REGISTERED,
         MemoryModuleType.WALK_TARGET to MemoryModuleState.VALUE_ABSENT,
-        MemoryModuleType.JOB_SITE to MemoryModuleState.VALUE_PRESENT
-//        CustomProfessionInit.lastPaidModule to MemoryModuleState.REGISTERED
+        MemoryModuleType.JOB_SITE to MemoryModuleState.VALUE_PRESENT,
+        CustomProfessionInit.lastEatenModule to MemoryModuleState.REGISTERED
     ),
     BASE_DELAY
 ) {
@@ -64,7 +64,7 @@ class CraftTask : Task<VillagerEntity>(
             ?: return false
 
         // we've had enough food to keep working
-        val eaten: Optional<Timestamp> = villager.brain.getOptionalMemory(CustomProfessionInit.lastPaidModule) as Optional<Timestamp>
+        val eaten: Optional<Timestamp> = villager.brain.getOptionalMemory(CustomProfessionInit.lastEatenModule) as Optional<Timestamp>
         if (!eaten.isPresent || eaten.get().time > (villager.world.time + 6000L)) {
             var hasEaten = false
             for (i in 0 until villager.inventory.invSize) {
@@ -73,11 +73,11 @@ class CraftTask : Task<VillagerEntity>(
                     villager.playSound(SoundEvents.ENTITY_GENERIC_EAT, 1f, 1f)
                     stack.decrement(1)
                     hasEaten = true
-                    villager.brain.putMemory(CustomProfessionInit.lastPaidModule, Timestamp.of(villager.world.time))
+                    villager.brain.putMemory(CustomProfessionInit.lastEatenModule, Timestamp.of(villager.world.time))
                 }
             }
-            if (!hasEaten && villager.world.time % 40 == 0L) {
-                villager.playSound(SoundEvents.ENTITY_VILLAGER_NO, 1f, 1f)
+            if (!hasEaten) {
+                if (villager.world.time % 40 == 0L) villager.playSound(SoundEvents.ENTITY_VILLAGER_NO, 1f, 1f)
                 return false
             }
         }
