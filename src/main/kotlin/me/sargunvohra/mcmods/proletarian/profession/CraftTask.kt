@@ -15,13 +15,16 @@ import net.minecraft.server.world.ServerWorld
 import net.minecraft.sound.SoundEvents
 import net.minecraft.util.DefaultedList
 import net.minecraft.util.ItemScatterer
+import net.minecraft.util.Timestamp
 import net.minecraft.world.GameRules
+import java.util.*
 
 class CraftTask : Task<VillagerEntity>(
     mapOf(
         MemoryModuleType.LOOK_TARGET to MemoryModuleState.REGISTERED,
         MemoryModuleType.WALK_TARGET to MemoryModuleState.VALUE_ABSENT,
-        MemoryModuleType.JOB_SITE to MemoryModuleState.VALUE_PRESENT
+        MemoryModuleType.JOB_SITE to MemoryModuleState.VALUE_PRESENT,
+        CustomProfessionInit.lastPaidModule to MemoryModuleState.VALUE_PRESENT
     ),
     BASE_DELAY
 ) {
@@ -59,6 +62,21 @@ class CraftTask : Task<VillagerEntity>(
         // our job site is the right type
         val station = world.getBlockEntity(jobSite.pos) as? CraftingStationBlockEntity
             ?: return false
+
+        val eaten: Optional<Timestamp> = villager.brain.getOptionalMemory(CustomProfessionInit.lastPaidModule) as Optional<Timestamp>
+
+        if (!eaten.isPresent || eaten.get().time > (villager.world.time + 24000L)) {
+            var hasEaten = false
+            for (i in 0 until villager.inventory.invSize) {
+                val stack = villager.inventory.getInvStack(i)
+                if (stack.isFood) {
+                    stack.decrement(1)
+                    hasEaten = true
+                    villager.brain.putMemory(CustomProfessionInit.lastPaidModule, Timestamp.of(villager.world.time))
+                }
+            }
+            if (!hasEaten) return false
+        }
 
         targetStation = station
         return true
