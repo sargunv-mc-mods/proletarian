@@ -63,9 +63,14 @@ class CraftTask : Task<VillagerEntity>(
         val station = world.getBlockEntity(jobSite.pos) as? CraftingStationBlockEntity
             ?: return false
 
-        // we've had enough food to keep working
+        // we've slept recently
+        //TODO: want this?
+//        val slept: Optional<Timestamp> = villager.brain.getOptionalMemory(MemoryModuleType.LAST_SLEPT) as Optional<Timestamp>
+//        if (!slept.isPresent || villager.world.time - slept.get().time > 24000L) return false
+
+        // we've eaten food recently, or have food to eat otherwise
         val eaten: Optional<Timestamp> = villager.brain.getOptionalMemory(CustomProfessionInit.lastEatenModule) as Optional<Timestamp>
-        if (!eaten.isPresent || eaten.get().time > (villager.world.time + 6000L)) {
+        if (!eaten.isPresent || villager.world.time - eaten.get().time > 6000L) {
             var hasEaten = false
             for (i in 0 until villager.inventory.invSize) {
                 val stack = villager.inventory.getInvStack(i)
