@@ -10,6 +10,11 @@ import net.minecraft.util.math.BlockPos
 import kotlin.reflect.KClass
 import kotlin.reflect.jvm.isAccessible
 import com.mojang.blaze3d.platform.GlStateManager
+import net.minecraft.block.entity.BannerPattern
+import net.minecraft.item.Items
+import net.minecraft.text.TranslatableText
+import net.minecraft.util.DyeColor
+import net.minecraft.util.Formatting
 import net.minecraft.util.math.Direction
 
 fun id(name: String) = Identifier("proletarian", name)
@@ -62,4 +67,21 @@ fun rotateRenderState(dir: Direction) {
             GlStateManager.translated(-1.0, 0.0, 0.0)
         }
     }
+}
+
+fun getUnityBanner(): ItemStack {
+    val stack = ItemStack(Items.BLACK_BANNER)
+    val tag = stack.getOrCreateSubTag("BlockEntityTag")
+    val list = BannerPattern.Builder()
+        .with(BannerPattern.BRICKS, DyeColor.GRAY)
+        .with(BannerPattern.CIRCLE_MIDDLE, DyeColor.LIGHT_GRAY)
+        .with(BannerPattern.FLOWER, DyeColor.RED)
+        .with(BannerPattern.TRIANGLES_BOTTOM, DyeColor.RED)
+        .with(BannerPattern.TRIANGLES_TOP, DyeColor.RED)
+        .with(BannerPattern.CURLY_BORDER, DyeColor.RED)
+        .with(BannerPattern.BORDER, DyeColor.RED)
+        .build()
+    tag.put("Patterns", list)
+    stack.setCustomName(TranslatableText("block.proletarian.unity_banner").formatted(Formatting.GOLD))
+    return stack
 }

@@ -73,7 +73,7 @@ class CraftTask : Task<VillagerEntity>(
         // we've slept recently
         val slept: Optional<Timestamp> = villager.brain.getOptionalMemory(MemoryModuleType.LAST_SLEPT) as Optional<Timestamp>
         if (!slept.isPresent || villager.world.time - slept.get().time > 24000L) {
-            complain(villager, VillageGossipType.MAJOR_POSITIVE)
+            complain(villager, VillageGossipType.MAJOR_NEGATIVE)
             return false
         }
 
@@ -82,7 +82,7 @@ class CraftTask : Task<VillagerEntity>(
         if (!eaten.isPresent || villager.world.time - eaten.get().time > 3000L) {
             access.proletarian_consumeAvailableFood()
             if (access.proletarian_getFoodLevel() < 1) {
-                complain(villager, VillageGossipType.MAJOR_POSITIVE)
+                complain(villager, VillageGossipType.MAJOR_NEGATIVE)
                 return false
             } else {
                 villager.brain.putMemory(CustomProfessionInit.lastEatenModule, Timestamp.of(villager.world.time))
@@ -92,7 +92,7 @@ class CraftTask : Task<VillagerEntity>(
 
         // we've gossipped in the past three days
         if (villager.world.time - access.proletarian_getGossipStartTime() > 72000L) {
-            complain(villager, VillageGossipType.MINOR_POSITIVE)
+            complain(villager, VillageGossipType.MINOR_NEGATIVE)
             return false
         }
 

@@ -9,9 +9,6 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Mixin(VillagerEntity.class)
 public interface VillagerEntityAccess {
 
-    @Invoker(value = "lacksFood")
-    boolean proletarian_lacksFood();
-
     @Invoker(value = "consumeAvailableFood")
     void proletarian_consumeAvailableFood();
 
@@ -22,10 +19,10 @@ public interface VillagerEntityAccess {
     void proletarian_sayNo();
 
     @Accessor(value = "foodLevel")
-    int proletarian_getFoodLevel();
+    byte proletarian_getFoodLevel();
 
     @Accessor(value = "gossipStartTime")
-    int proletarian_getGossipStartTime();
+    long proletarian_getGossipStartTime();
 
     @Accessor(value = "gossip")
     VillagerGossips proletarian_getGossips();

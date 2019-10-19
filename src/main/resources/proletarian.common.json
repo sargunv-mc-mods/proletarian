@@ -8,6 +8,7 @@
         "CraftingResultSlotAccess",
         "CraftingTableContainerAccess",
         "SlotAccess",
+        "VillagerEntityAccess",
         "VillagerEntityMixin",
         "VillagerTaskListProviderMixin",
         "PointOfInterestTypeAccess"
