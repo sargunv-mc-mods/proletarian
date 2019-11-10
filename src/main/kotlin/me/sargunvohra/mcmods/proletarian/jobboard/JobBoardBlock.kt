@@ -64,8 +64,8 @@ object JobBoardBlock: Block(
             )
 
             if (poiPos.isPresent) {
-                val villager = VillagerEntity(EntityType.VILLAGER, world, VillagerType.forBiome(world.getBiome(pos)))
                 val newPos = getBlockPos(world, pos, random)
+                val villager = VillagerEntity(EntityType.VILLAGER, world, VillagerType.forBiome(world.getBiome(newPos)))
                 villager.setPosition(newPos.x.toDouble(), newPos.y.toDouble(), newPos.z.toDouble())
                 world.spawnEntity(villager)
             }
