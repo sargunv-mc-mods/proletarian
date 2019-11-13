@@ -16,7 +16,7 @@ plugins {
     kotlin("jvm") version "1.3.40"
     idea
     `maven-publish`
-    id("fabric-loom") version "0.2.3-SNAPSHOT"
+    id("fabric-loom") version "0.2.5-SNAPSHOT"
     id("com.palantir.git-version") version "0.11.0"
     id("com.matthewprenger.cursegradle") version "1.4.0"
 }
@@ -38,6 +38,7 @@ repositories {
     mavenCentral()
     jcenter()
     maven(url = "http://maven.fabricmc.net")
+    maven(url = "http://server.bbkr.space:8081/artifactory/libs-release")
 }
 
 val gitVersion: groovy.lang.Closure<Any> by extra
@@ -60,10 +61,13 @@ configurations {
 dependencies {
     minecraft("com.mojang:minecraft:$minecraftVersion")
     mappings("net.fabricmc:yarn:$minecraftVersion+build.3")
-    modCompile("net.fabricmc:fabric-loader:0.4.8+")
+    modImplementation("net.fabricmc:fabric-loader:0.6.4+build.169")
 
-    modCompile("net.fabricmc.fabric-api:fabric-api:0.3.0+build.206")
-    modCompile("net.fabricmc:fabric-language-kotlin:1.3.40+")
+    modImplementation("net.fabricmc.fabric-api:fabric-api:0.4.1+build.245-1.14")
+    modImplementation("net.fabricmc:fabric-language-kotlin:1.3.50+")
+
+    modImplementation("io.github.cottonmc:Jankson-Fabric:2.0.0+j1.2.0")
+    include("io.github.cottonmc:Jankson-Fabric:2.0.0+j1.2.0")
 }
 
 val processResources = tasks.getByName<ProcessResources>("processResources") {

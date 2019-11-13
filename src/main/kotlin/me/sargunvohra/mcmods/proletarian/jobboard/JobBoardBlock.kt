@@ -101,7 +101,8 @@ object JobBoardBlock: Block(
                     world!!.addParticle(ParticleTypes.HAPPY_VILLAGER, pos!!.x.toDouble() + 0.13124999403953552 + 0.737500011920929 * random.nextFloat().toDouble(), pos.y.toDouble() + height + random.nextFloat().toDouble() * (1.0 - height), pos.z.toDouble() + 0.13124999403953552 + 0.737500011920929 * random.nextFloat().toDouble(), spreadX, spreadY, spreadZ)
                 }
             }
+            return true
         }
-        return true
+        return false
     }
 }
