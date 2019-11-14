@@ -95,7 +95,41 @@ public class VillagerNamer implements SimpleSynchronousResourceReloadListener {
 	}
 
 	private void parseNameSets(JsonObject json) {
+		if (json.containsKey("default")) {
+			NameSet set = makeNameSet(json.getObject("default"));
+			if (set != null) DEFAULT_NAME_SET = set;
+			json.remove("default");
+		}
+		for (String key : json.keySet()) {
+			Identifier id = new Identifier(key);
+			VillagerType type = Registry.VILLAGER_TYPE.get(id);
+			NAME_SETS.put(type, makeNameSet(json.getObject(key)));
+		}
+	}
 
+	private NameSet makeNameSet(JsonObject json) {
+		if (json == null) return null;
+		List<String> first = new ArrayList<>();
+		List<String> last = new ArrayList<>();
+		JsonElement firstElem = json.get("first");
+		if (firstElem instanceof JsonArray) {
+			JsonArray array = (JsonArray)firstElem;
+			for (JsonElement elem : array) {
+				if (elem instanceof JsonPrimitive) {
+					first.add(((JsonPrimitive)elem).toString());
+				}
+			}
+		}
+		JsonElement lastElem = json.get("last");
+		if (lastElem instanceof JsonArray) {
+			JsonArray array = (JsonArray)lastElem;
+			for (JsonElement elem : array) {
+				if (elem instanceof JsonPrimitive) {
+					last.add(((JsonPrimitive)elem).toString());
+				}
+			}
+		}
+		return new NameSet(first, last);
 	}
 
 	@Override
