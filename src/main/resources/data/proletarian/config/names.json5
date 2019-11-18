@@ -1,0 +1,26 @@
+{
+  "languages": {
+    "default": {
+      "language_name": "Lemesma",
+      "categories": {
+        "C": "nktdƫbsmlprß¶gĸ",
+        "R": "rmnl",
+        "V": "eoiua"
+      },
+      "syllables": [
+        "RVCRV",
+        "RVRVCRV",
+        "RVCRVRV",
+        "RVRV",
+        "RVRVRV"
+      ],
+      "replacements": {
+        "ƫ": "tt",
+        "¶": "pp",
+        "ĸ": "kk",
+        "ß": "ss"
+      },
+      "monosyllable_rate": 1
+    }
+  }
+}

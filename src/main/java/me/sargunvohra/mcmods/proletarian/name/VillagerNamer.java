@@ -69,8 +69,8 @@ public class VillagerNamer implements SimpleSynchronousResourceReloadListener {
 		Map<Character, String> categories = new HashMap<>();
 		Map<String, String> replacements = new HashMap<>();
 		List<String> syllables = new ArrayList<>();
-		int dropoff = json.getInt("dropoff", 50);
-		int sylDrop = json.getInt("syllable_dropoff", 50);
+		float dropoff = json.getFloat("dropoff", 0.5F);
+		float sylDrop = json.getFloat("syllable_dropoff", 0.5F);
 		float monoSyl = json.getFloat("monosyllable_rate", 0.2F);
 		JsonObject cats = json.getObject("categories");
 		if (cats == null) return null;
@@ -90,6 +90,9 @@ public class VillagerNamer implements SimpleSynchronousResourceReloadListener {
 			if (syllable instanceof JsonPrimitive) {
 				syllables.add(((JsonPrimitive)syllable).toString());
 			}
+		}
+		if (json.containsKey("language_name")) {
+			return new Language(categories, replacements, syllables, dropoff, sylDrop, monoSyl, json.get(String.class, "language_name"));
 		}
 		return new Language(categories, replacements, syllables, dropoff, sylDrop, monoSyl);
 	}

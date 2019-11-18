@@ -8,19 +8,25 @@ public class Language {
 	private Map<Character, String> categories;
 	private Map<String, String> replacements; //TODO: priority ordering
 	private List<String> syllables;
-	private int dropoff;
-	private int sylDrop;
+	private String name;
+	private float dropoff;
+	private float sylDrop;
 	private float monoSyl;
 	private Random random = new Random();
 
-	//TODO: convert power rule stuff to floats?
-	public Language(Map<Character, String> categories, Map<String, String> replacements, List<String> syllables, int dropoff, int sylDrop, float monoSyl) {
+	public Language(Map<Character, String> categories, Map<String, String> replacements, List<String> syllables, float dropoff, float sylDrop, float monoSyl, String name) {
+		this(categories, replacements, syllables, dropoff, sylDrop, monoSyl);
+		this.name = name;
+	}
+
+	public Language(Map<Character, String> categories, Map<String, String> replacements, List<String> syllables, float dropoff, float sylDrop, float monoSyl) {
 		this.categories = categories;
 		this.replacements = replacements;
 		this.syllables = syllables;
 		this.dropoff = dropoff;
 		this.sylDrop = sylDrop;
 		this.monoSyl = monoSyl;
+		this.name = getName();
 	}
 
 	/**
@@ -29,9 +35,9 @@ public class Language {
 	 * @param percent The chance of staying at any given bin.
 	 * @return The number of the bin to stop at.
 	 */
-	private int powerLaw(int max, int percent) {
+	private int powerLaw(int max, float percent) {
 		for (int i = 0; true; i = (i + 1) % max) {
-			if (random.nextInt(100) < percent) return i;
+			if (random.nextFloat() < percent) return i;
 		}
 	}
 
@@ -42,7 +48,7 @@ public class Language {
 	 * @param percent The chance of staying at any given bim.
 	 * @return The number of the bin to stop at.
 	 */
-	private int peakedPowerLaw(int max, int mode, int percent) {
+	private int peakedPowerLaw(int max, int mode, float percent) {
 		if (random.nextBoolean()) {
 			return mode + powerLaw(max - mode, percent);
 		} else {
@@ -51,8 +57,7 @@ public class Language {
 	}
 
 	/**
-	 * Construct a syllable from the stored categories.
-	 * @return
+	 * @return A constructed syllable from the set categories.
 	 */
 	private String syllable() {
 		StringBuilder ret = new StringBuilder();
@@ -88,7 +93,7 @@ public class Language {
 		int syllables = 1;
 		if (monoSyl > 0F) {
 			if (random.nextFloat() > monoSyl) {
-				syllables += 1 + powerLaw(4, 50);
+				syllables += 1 + powerLaw(4, 0.5F);
 			}
 		}
 
@@ -103,6 +108,10 @@ public class Language {
 		ret = ret.substring(0, 1) + ret.substring(1);
 
 		return ret;
+	}
+
+	public String getLanguageName() {
+		return name;
 	}
 
 }
