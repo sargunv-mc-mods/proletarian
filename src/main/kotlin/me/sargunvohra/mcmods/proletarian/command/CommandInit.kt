@@ -1,15 +1,9 @@
 package me.sargunvohra.mcmods.proletarian.command
 
-import com.mojang.brigadier.context.CommandContext
-import com.mojang.brigadier.suggestion.SuggestionProvider
-import com.mojang.brigadier.suggestion.SuggestionsBuilder
 import me.sargunvohra.mcmods.proletarian.hack.LambdaConstructors
 import net.fabricmc.fabric.api.registry.CommandRegistry
 import net.minecraft.command.arguments.IdentifierArgumentType
 import net.minecraft.server.command.CommandManager
-import net.minecraft.server.command.CommandSource
-import net.minecraft.server.command.ServerCommandSource
-import net.minecraft.util.registry.Registry
 
 object CommandInit {
 
