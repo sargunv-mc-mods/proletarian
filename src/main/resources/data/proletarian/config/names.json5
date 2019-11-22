@@ -1,4 +1,5 @@
 {
+  "generated_name_rate": 1, //TODO: switch to 0.5 when we have more names
   "languages": {
     "default": {
       "language_name": "Lemesma",
@@ -21,6 +22,12 @@
         "ß": "ss"
       },
       "monosyllable_rate": 1
+    }
+  },
+  "name_sets": {
+    "default": {
+      "first": ["Karen", "John", "Michael"], //TODO: more names
+      "last": ["Smith", "Porter", "Fletcher"] //TODO: more names
     }
   }
 }

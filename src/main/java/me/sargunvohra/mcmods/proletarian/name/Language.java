@@ -105,7 +105,9 @@ public class Language {
 		for (String regex : replacements.keySet()) {
 			ret = ret.replaceAll(regex, replacements.get(regex));
 		}
-		ret = ret.substring(0, 1) + ret.substring(1);
+		//for some reason the names get an extra set of quotes added
+		ret = ret.substring(1, ret.length() - 1);
+		ret = ret.substring(0, 1).toUpperCase() + ret.substring(1);
 
 		return ret;
 	}

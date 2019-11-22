@@ -140,6 +140,32 @@ public class VillagerNamer implements SimpleSynchronousResourceReloadListener {
 		return new Identifier("proletarian", "villager_namer");
 	}
 
+	public static String getFirstName() {
+		if (random.nextFloat() < genRate) {
+			return DEFAULT_LANGUAGE.getName();
+		} else {
+			return DEFAULT_NAME_SET.getFirstName();
+		}
+	}
+
+	public static String getLastName() {
+		if (random.nextFloat() < genRate) {
+			return DEFAULT_LANGUAGE.getName();
+		} else {
+			return DEFAULT_NAME_SET.getLastName();
+		}
+	}
+
+	public static Pair<String, String> getFullName() {
+		if (random.nextFloat() < genRate) {
+			Language lang = DEFAULT_LANGUAGE;
+			return new Pair<>(lang.getName(), lang.getName());
+		} else {
+			NameSet nameSet = DEFAULT_NAME_SET;
+			return new Pair<>(nameSet.getFirstName(), nameSet.getLastName());
+		}
+	}
+
 	public static String getFirstName(VillagerType type) {
 		if (random.nextFloat() < genRate) {
 			return LANGUAGES.getOrDefault(type, DEFAULT_LANGUAGE).getName();

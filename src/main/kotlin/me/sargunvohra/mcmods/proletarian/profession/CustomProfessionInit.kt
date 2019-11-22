@@ -3,7 +3,7 @@ package me.sargunvohra.mcmods.proletarian.profession
 import com.google.common.collect.ImmutableSet
 import me.sargunvohra.mcmods.proletarian.construct
 import me.sargunvohra.mcmods.proletarian.craftingstation.CraftingStationBlock
-import me.sargunvohra.mcmods.proletarian.hack.MemoryModuleHack
+import me.sargunvohra.mcmods.proletarian.hack.LambdaConstructors
 import me.sargunvohra.mcmods.proletarian.id
 import me.sargunvohra.mcmods.proletarian.mixin.PointOfInterestTypeAccess
 import net.minecraft.block.Block
@@ -35,7 +35,7 @@ object CustomProfessionInit {
     )
     val lastEatenModule = construct(
         MemoryModuleType::class,
-        MemoryModuleHack.FED_MEMORY_MODULE
+        LambdaConstructors.FED_MEMORY_MODULE
     ) as MemoryModuleType<Timestamp>
 
     fun register() {

@@ -14,10 +14,14 @@ public class NameSet {
 	}
 
 	public String getFirstName() {
-		return FIRST_NAMES.get(random.nextInt(FIRST_NAMES.size()));
+		String ret = FIRST_NAMES.get(random.nextInt(FIRST_NAMES.size()));
+		//for some reason the names get an extra set of quotes added
+		return ret.substring(1, ret.length() - 1);
 	}
 
 	public String getLastName() {
-		return LAST_NAMES.get(random.nextInt(LAST_NAMES.size()));
+		String ret = LAST_NAMES.get(random.nextInt(LAST_NAMES.size()));
+		//for some reason the names get an extra set of quotes added
+		return ret.substring(1, ret.length() - 1);
 	}
 }
