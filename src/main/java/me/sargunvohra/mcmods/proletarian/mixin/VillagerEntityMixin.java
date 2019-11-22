@@ -3,7 +3,9 @@ package me.sargunvohra.mcmods.proletarian.mixin;
 import com.google.common.collect.ImmutableList;
 import me.sargunvohra.mcmods.proletarian.mixinapi.NamedVillager;
 import me.sargunvohra.mcmods.proletarian.name.VillagerNamer;
+import me.sargunvohra.mcmods.proletarian.network.ProletarianNetworking;
 import me.sargunvohra.mcmods.proletarian.profession.CustomProfessionInit;
+import net.fabricmc.fabric.api.server.PlayerStream;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LightningEntity;
@@ -13,11 +15,13 @@ import net.minecraft.entity.mob.WitchEntity;
 import net.minecraft.entity.passive.AbstractTraderEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.passive.VillagerEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.scoreboard.AbstractTeam;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.village.VillagerData;
+import net.minecraft.village.VillagerType;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -68,18 +72,27 @@ public abstract class VillagerEntityMixin extends AbstractTraderEntity implement
 
     @Shadow public abstract VillagerData getVillagerData();
 
+    @Shadow public abstract void writeCustomDataToTag(CompoundTag compoundTag_1);
+
     public VillagerEntityMixin(EntityType<? extends AbstractTraderEntity> type, World world) {
         super(type, world);
+    }
+
+    @Inject(method = "<init>(Lnet/minecraft/entity/EntityType;Lnet/minecraft/world/World;Lnet/minecraft/village/VillagerType;)V", at = @At("RETURN"))
+    private void genNameOnInit(EntityType<? extends VillagerEntity> type, World world, VillagerType villagerType, CallbackInfo info) {
+        if (!world.isClient) {
+            firstName = VillagerNamer.getFirstName(villagerType);
+            lastName = VillagerNamer.getLastName(villagerType);
+            PlayerStream.watching(this).forEach(player -> ProletarianNetworking.INSTANCE.sendVillagerName(player, this, firstName, lastName));
+        }
     }
 
     @Inject(method = "getDisplayName", at = @At("TAIL"), cancellable = true, locals = LocalCapture.CAPTURE_FAILEXCEPTION)
     private void addName(CallbackInfoReturnable<Text> info, AbstractTeam team) {
         Text oldName = info.getReturnValue();
-        if (firstName == null) {
-            firstName = VillagerNamer.getFirstName(getVillagerData().getType());
-        }
-        if (lastName == null) {
-            lastName = VillagerNamer.getLastName(getVillagerData().getType());
+        if ((firstName == null || lastName == null) && world.isClient) {
+            ProletarianNetworking.INSTANCE.requestVillagerName(this);
+            return;
         }
         Text newName = new LiteralText(firstName + " " + lastName + " (");
         newName.append(oldName);
@@ -94,15 +107,23 @@ public abstract class VillagerEntityMixin extends AbstractTraderEntity implement
     @Inject(method = "writeCustomDataToTag", at = @At("RETURN"))
     private void writeTagData(CompoundTag tag, CallbackInfo info) {
         CompoundTag proleTag = new CompoundTag();
+        boolean shouldSendName = false;
         if (firstName == null) {
+            firstName = VillagerNamer.getFirstName(getVillagerData().getType());
             proleTag.putString("FirstName", VillagerNamer.getFirstName(getVillagerData().getType()));
+            shouldSendName = true;
         } else {
             proleTag.putString("FirstName", firstName);
         }
         if (lastName == null) {
-            proleTag.putString("LastName", VillagerNamer.getLastName(getVillagerData().getType()));
+            lastName = VillagerNamer.getLastName(getVillagerData().getType());
+            proleTag.putString("LastName", lastName);
+            shouldSendName = true;
         } else {
             proleTag.putString("LastName", lastName);
+        }
+        if (!world.isClient && shouldSendName && firstName != null && lastName != null) {
+            PlayerStream.watching(this).forEach((player -> ProletarianNetworking.INSTANCE.sendVillagerName(player, (VillagerEntity)(Object)this, firstName, lastName)));
         }
         tag.put("Proletarian", proleTag);
     }
@@ -111,15 +132,21 @@ public abstract class VillagerEntityMixin extends AbstractTraderEntity implement
     private void readTagData(CompoundTag tag, CallbackInfo info) {
         if (tag.containsKey("Proletarian", NbtType.COMPOUND)) {
             CompoundTag proleTag = tag.getCompound("Proletarian");
+            boolean shouldSendName = false;
             if (proleTag.containsKey("FirstName", NbtType.STRING)) {
                 this.firstName = proleTag.getString("FirstName");
             } else {
                 this.firstName = VillagerNamer.getFirstName(getVillagerData().getType());
+                shouldSendName = true;
             }
             if (proleTag.containsKey("LastName", NbtType.STRING)) {
                 this.lastName = proleTag.getString("LastName");
             } else {
                 this.lastName = VillagerNamer.getLastName(getVillagerData().getType());
+                shouldSendName = true;
+            }
+            if (!world.isClient && shouldSendName && firstName != null && lastName != null) {
+                PlayerStream.watching(this).forEach((player -> ProletarianNetworking.INSTANCE.sendVillagerName(player, (VillagerEntity)(Object)this, firstName, lastName)));
             }
         }
     }
@@ -145,5 +172,16 @@ public abstract class VillagerEntityMixin extends AbstractTraderEntity implement
     @Override
     public String getRenderedName() {
         return firstName + " " + lastName;
+    }
+
+    @Override
+    public void setName(String first, String last) {
+        this.firstName = first;
+        this.lastName = last;
+    }
+
+    @Override
+    public VillagerType getVillagerType() {
+        return getVillagerData().getType();
     }
 }
