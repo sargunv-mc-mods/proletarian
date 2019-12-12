@@ -1,8 +1,11 @@
 package me.sargunvohra.mcmods.proletarian.craftingstation
 
+import com.mojang.blaze3d.platform.GlStateManager
 import me.sargunvohra.mcmods.proletarian.rotateRenderState
 import net.minecraft.client.MinecraftClient
+import net.minecraft.client.render.OverlayTexture
 import net.minecraft.client.render.VertexConsumerProvider
+import net.minecraft.client.render.WorldRenderer
 import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher
 import net.minecraft.client.render.block.entity.BlockEntityRenderer
 import net.minecraft.client.render.model.json.ModelTransformation
@@ -17,7 +20,7 @@ class CraftingStationRenderer(dispatcher: BlockEntityRenderDispatcher) : BlockEn
     override fun render(
         entity: CraftingStationBlockEntity?,
         tickDelta: Float,
-        matrices: MatrixStack?,
+        matrices: MatrixStack,
         vertexConsumers: VertexConsumerProvider?,
         light: Int,
         overlay: Int
@@ -27,7 +30,7 @@ class CraftingStationRenderer(dispatcher: BlockEntityRenderDispatcher) : BlockEn
         val state = entity!!.world!!.getBlockState(entity.pos)
         if (state?.block != CraftingStationBlock) return
 
-        matrices!!.push()
+        matrices.push()
 
         rotateRenderState(state.get(Properties.HORIZONTAL_FACING), matrices)
 
@@ -53,7 +56,7 @@ class CraftingStationRenderer(dispatcher: BlockEntityRenderDispatcher) : BlockEn
             }
 
             matrices.scale(.14.toFloat(), .14.toFloat(), .14.toFloat())
-            itemRenderer.renderItem(stack, ModelTransformation.Type.FIXED, light, overlay, matrices, vertexConsumers)
+            itemRenderer.renderItem(stack, ModelTransformation.Type.GUI, WorldRenderer.getLightmapCoordinates(entity.world, entity.pos.up()), OverlayTexture.DEFAULT_UV, matrices, vertexConsumers)
             matrices.pop()
         }
 
