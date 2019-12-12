@@ -27,8 +27,6 @@ class CraftingStationRenderer(dispatcher: BlockEntityRenderDispatcher) : BlockEn
         val state = entity!!.world!!.getBlockState(entity.pos)
         if (state?.block != CraftingStationBlock) return
 
-        val lightLevel = entity.world!!.getLightLevel(entity.pos.up(), 0)
-
         matrices!!.push()
 
         rotateRenderState(state.get(Properties.HORIZONTAL_FACING), matrices)
@@ -55,7 +53,7 @@ class CraftingStationRenderer(dispatcher: BlockEntityRenderDispatcher) : BlockEn
             }
 
             matrices.scale(.14.toFloat(), .14.toFloat(), .14.toFloat())
-            itemRenderer.renderItem(stack, ModelTransformation.Type.FIXED, lightLevel, overlay, matrices, vertexConsumers)
+            itemRenderer.renderItem(stack, ModelTransformation.Type.FIXED, light, overlay, matrices, vertexConsumers)
             matrices.pop()
         }
 
