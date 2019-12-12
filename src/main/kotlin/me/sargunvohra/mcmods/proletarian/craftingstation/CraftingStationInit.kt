@@ -1,7 +1,7 @@
 package me.sargunvohra.mcmods.proletarian.craftingstation
 
 import me.sargunvohra.mcmods.proletarian.id
-import net.fabricmc.fabric.api.client.render.BlockEntityRendererRegistry
+import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry
 import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry
 import net.minecraft.block.entity.BlockEntityType
@@ -52,7 +52,7 @@ object CraftingStationInit {
     }
 
     fun registerClient() {
-        BlockEntityRendererRegistry.INSTANCE.register(CraftingStationBlockEntity::class.java, CraftingStationRenderer)
+        BlockEntityRendererRegistry.INSTANCE.register(BLOCK_ENTITY_TYPE, ::CraftingStationRenderer)
 
         ScreenProviderRegistry.INSTANCE.registerFactory(CRAFTING_ID) { syncId, _, player, buf ->
             val pos = buf.readBlockPos()

@@ -11,6 +11,8 @@ import kotlin.reflect.KClass
 import kotlin.reflect.jvm.isAccessible
 import com.mojang.blaze3d.platform.GlStateManager
 import net.minecraft.block.entity.BannerPattern
+import net.minecraft.client.util.math.MatrixStack
+import net.minecraft.client.util.math.Vector3f
 import net.minecraft.item.Items
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.DyeColor
@@ -52,19 +54,22 @@ fun ItemStack.canMergeWith(other: ItemStack): Boolean {
     }
 }
 
-fun rotateRenderState(dir: Direction) {
+fun rotateRenderState(dir: Direction, matrices: MatrixStack) {
     when {
         dir === Direction.EAST -> {
-            GlStateManager.rotated(-90.0, 0.0, 1.0, 0.0)
-            GlStateManager.translated(0.0, 0.0, -1.0)
+            matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion((-90.0).toFloat()))
+//            GlStateManager.rotated(-90.0, 0.0, 1.0, 0.0)
+            matrices.translate(0.0, 0.0, -1.0)
         }
         dir === Direction.SOUTH -> {
-            GlStateManager.rotated(-180.0, 0.0, 1.0, 0.0)
-            GlStateManager.translated(-1.0, 0.0, -1.0)
+            matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion((-180.0).toFloat()))
+//            GlStateManager.rotated(-180.0, 0.0, 1.0, 0.0)
+            matrices.translate(-1.0, 0.0, -1.0)
         }
         dir === Direction.WEST -> {
-            GlStateManager.rotated(-270.0, 0.0, 1.0, 0.0)
-            GlStateManager.translated(-1.0, 0.0, 0.0)
+            matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion((-270.0).toFloat()))
+//            GlStateManager.rotated(-270.0, 0.0, 1.0, 0.0)
+            matrices.translate(-1.0, 0.0, 0.0)
         }
     }
 }
@@ -72,15 +77,15 @@ fun rotateRenderState(dir: Direction) {
 fun getUnityBanner(): ItemStack {
     val stack = ItemStack(Items.BLACK_BANNER)
     val tag = stack.getOrCreateSubTag("BlockEntityTag")
-    val list = BannerPattern.Builder()
-        .with(BannerPattern.BRICKS, DyeColor.GRAY)
-        .with(BannerPattern.CIRCLE_MIDDLE, DyeColor.LIGHT_GRAY)
-        .with(BannerPattern.FLOWER, DyeColor.RED)
-        .with(BannerPattern.TRIANGLES_BOTTOM, DyeColor.RED)
-        .with(BannerPattern.TRIANGLES_TOP, DyeColor.RED)
-        .with(BannerPattern.CURLY_BORDER, DyeColor.RED)
-        .with(BannerPattern.BORDER, DyeColor.RED)
-        .build()
+    val list = BannerPattern.Patterns()
+        .add(BannerPattern.BRICKS, DyeColor.GRAY)
+        .add(BannerPattern.CIRCLE_MIDDLE, DyeColor.LIGHT_GRAY)
+        .add(BannerPattern.FLOWER, DyeColor.RED)
+        .add(BannerPattern.TRIANGLES_BOTTOM, DyeColor.RED)
+        .add(BannerPattern.TRIANGLES_TOP, DyeColor.RED)
+        .add(BannerPattern.CURLY_BORDER, DyeColor.RED)
+        .add(BannerPattern.BORDER, DyeColor.RED)
+        .toTag()
     tag.put("Patterns", list)
     stack.setCustomName(TranslatableText("block.proletarian.unity_banner").formatted(Formatting.GOLD))
     return stack

@@ -13,10 +13,10 @@ val modMavenGroup: String by project
 
 plugins {
     java
-    kotlin("jvm") version "1.3.40"
+    kotlin("jvm") version "1.3.60"
     idea
     `maven-publish`
-    id("fabric-loom") version "0.2.5-SNAPSHOT"
+    id("fabric-loom") version "0.2.7-SNAPSHOT"
     id("com.palantir.git-version") version "0.11.0"
     id("com.matthewprenger.cursegradle") version "1.4.0"
 }
@@ -60,11 +60,11 @@ configurations {
 
 dependencies {
     minecraft("com.mojang:minecraft:$minecraftVersion")
-    mappings("net.fabricmc:yarn:$minecraftVersion+build.3")
-    modImplementation("net.fabricmc:fabric-loader:0.6.4+build.169")
+    mappings("net.fabricmc:yarn:$minecraftVersion+build.2:v2")
+    modImplementation("net.fabricmc:fabric-loader:0.7.2+build.174")
 
-    modImplementation("net.fabricmc.fabric-api:fabric-api:0.4.1+build.245-1.14")
-    modImplementation("net.fabricmc:fabric-language-kotlin:1.3.50+")
+    modImplementation("net.fabricmc.fabric-api:fabric-api:0.4.24+build.279-1.15")
+    modImplementation("net.fabricmc:fabric-language-kotlin:1.3.60+")
 
     modImplementation("io.github.cottonmc:Jankson-Fabric:2.0.0+j1.2.0")
     include("io.github.cottonmc:Jankson-Fabric:2.0.0+j1.2.0")

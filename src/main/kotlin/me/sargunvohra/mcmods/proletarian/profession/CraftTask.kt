@@ -200,7 +200,7 @@ class CraftTask : Task<VillagerEntity>(
                 villager.playSound(SoundEvents.ENTITY_ITEM_PICKUP, .5f, 1f)
             }
             InsertResult.FAILED -> {
-                if (villager.rand.nextBoolean())
+                if (villager.random.nextBoolean())
                     villager.playAmbientSound()
             }
             InsertResult.COMPLETED -> {

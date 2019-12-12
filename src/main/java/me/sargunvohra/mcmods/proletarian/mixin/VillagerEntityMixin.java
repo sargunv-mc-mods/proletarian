@@ -87,21 +87,16 @@ public abstract class VillagerEntityMixin extends AbstractTraderEntity implement
         }
     }
 
-    @Inject(method = "getDisplayName", at = @At("TAIL"), cancellable = true, locals = LocalCapture.CAPTURE_FAILEXCEPTION)
-    private void addName(CallbackInfoReturnable<Text> info, AbstractTeam team) {
-        Text oldName = info.getReturnValue();
+    public Text getName() {
+        Text oldName = getDefaultName();
         if ((firstName == null || lastName == null) && world.isClient) {
             ProletarianNetworking.INSTANCE.requestVillagerName(this);
-            return;
+            return oldName;
         }
         Text newName = new LiteralText(firstName + " " + lastName + " (");
         newName.append(oldName);
         newName.append(new LiteralText(")"));
-        newName.styled((style) -> style.setHoverEvent(this.getHoverEvent()).setInsertion(this.getUuidAsString()));
-        if (team != null) {
-            newName.formatted(team.getColor());
-        }
-        info.setReturnValue(newName);
+        return newName;
     }
 
     @Inject(method = "writeCustomDataToTag", at = @At("RETURN"))
@@ -130,16 +125,16 @@ public abstract class VillagerEntityMixin extends AbstractTraderEntity implement
 
     @Inject(method = "readCustomDataFromTag", at = @At("RETURN"))
     private void readTagData(CompoundTag tag, CallbackInfo info) {
-        if (tag.containsKey("Proletarian", NbtType.COMPOUND)) {
+        if (tag.contains("Proletarian", NbtType.COMPOUND)) {
             CompoundTag proleTag = tag.getCompound("Proletarian");
             boolean shouldSendName = false;
-            if (proleTag.containsKey("FirstName", NbtType.STRING)) {
+            if (proleTag.contains("FirstName", NbtType.STRING)) {
                 this.firstName = proleTag.getString("FirstName");
             } else {
                 this.firstName = VillagerNamer.getFirstName(getVillagerData().getType());
                 shouldSendName = true;
             }
-            if (proleTag.containsKey("LastName", NbtType.STRING)) {
+            if (proleTag.contains("LastName", NbtType.STRING)) {
                 this.lastName = proleTag.getString("LastName");
             } else {
                 this.lastName = VillagerNamer.getLastName(getVillagerData().getType());
@@ -151,7 +146,7 @@ public abstract class VillagerEntityMixin extends AbstractTraderEntity implement
         }
     }
 
-    @Inject(method = "method_7225", at = @At("RETURN"))
+    @Inject(method = "createChild", at = @At("RETURN"))
     private void injectBabyLastName(PassiveEntity partner, CallbackInfoReturnable<VillagerEntity> info) {
         ((VillagerEntityMixin)(Object)info.getReturnValue()).lastName = this.lastName;
     }

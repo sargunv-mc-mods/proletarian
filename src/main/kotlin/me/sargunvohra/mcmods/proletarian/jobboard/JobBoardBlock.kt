@@ -12,8 +12,9 @@ import net.minecraft.item.Items
 import net.minecraft.particle.ParticleTypes
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.sound.BlockSoundGroup
-import net.minecraft.state.StateFactory
+import net.minecraft.state.StateManager
 import net.minecraft.state.property.Properties
+import net.minecraft.util.ActionResult
 import net.minecraft.util.BlockMirror
 import net.minecraft.util.BlockRotation
 import net.minecraft.util.Hand
@@ -36,7 +37,7 @@ object JobBoardBlock: Block(
 ) {
 
     init {
-        defaultState = this.stateFactory.defaultState.with(Properties.HORIZONTAL_FACING, Direction.NORTH)
+        defaultState = this.stateManager.defaultState.with(Properties.HORIZONTAL_FACING, Direction.NORTH)
     }
 
     override fun getPlacementState(context: ItemPlacementContext) =
@@ -48,11 +49,11 @@ object JobBoardBlock: Block(
     override fun mirror(state: BlockState, mirror: BlockMirror) =
         state.rotate(mirror.getRotation(state.get(Properties.HORIZONTAL_FACING)))!!
 
-    override fun appendProperties(stateFactoryBuilder: StateFactory.Builder<Block, BlockState>) {
+    override fun appendProperties(stateFactoryBuilder: StateManager.Builder<Block, BlockState>) {
         stateFactoryBuilder.add(Properties.HORIZONTAL_FACING)
     }
 
-    override fun onRandomTick(state: BlockState?, world: World?, pos: BlockPos?, random: Random?) {
+    override fun randomTick(state: BlockState?, world: ServerWorld?, pos: BlockPos?, random: Random?) {
         if (!world!!.isClient) {
             val server: ServerWorld = world as ServerWorld
             val poiPos: Optional<BlockPos> = server.pointOfInterestStorage.getNearestPosition(
@@ -87,13 +88,20 @@ object JobBoardBlock: Block(
         return newPos
     }
 
-    override fun activate(state: BlockState?, world: World?, pos: BlockPos?, player: PlayerEntity?, hand: Hand?, hit: BlockHitResult?): Boolean {
+    override fun onUse(
+        state: BlockState?,
+        world: World?,
+        pos: BlockPos?,
+        player: PlayerEntity?,
+        hand: Hand?,
+        hit: BlockHitResult?
+    ): ActionResult {
         if (player!!.getStackInHand(hand).item == Items.EMERALD_BLOCK) {
             if (!player.isCreative) player.getStackInHand(hand).decrement(1)
             val random = Random()
             if (random.nextInt(5) == 0) {
-                state!!.onRandomTick(world, pos, random)
-                val height = state.getOutlineShape(world, pos).method_1102(Direction.Axis.Y, 0.5, 0.5) + 0.03125
+                if (world is ServerWorld) state!!.randomTick(world, pos, random)
+                val height = state!!.getOutlineShape(world, pos).getEndingCoord(Direction.Axis.Y, 0.5, 0.5) + 0.03125
                 for (i in 0..9) {
                     val spreadX = random.nextGaussian() * 0.02
                     val spreadY = random.nextGaussian() * 0.02
@@ -101,8 +109,8 @@ object JobBoardBlock: Block(
                     world!!.addParticle(ParticleTypes.HAPPY_VILLAGER, pos!!.x.toDouble() + 0.13124999403953552 + 0.737500011920929 * random.nextFloat().toDouble(), pos.y.toDouble() + height + random.nextFloat().toDouble() * (1.0 - height), pos.z.toDouble() + 0.13124999403953552 + 0.737500011920929 * random.nextFloat().toDouble(), spreadX, spreadY, spreadZ)
                 }
             }
-            return true
+            return ActionResult.SUCCESS
         }
-        return false
+        return ActionResult.FAIL
     }
 }

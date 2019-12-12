@@ -2,7 +2,6 @@
     "required": true,
     "package": "me.sargunvohra.mcmods.proletarian.mixin",
     "compatibilityLevel": "JAVA_8",
-    "minVersion": "0.7.11-SNAPSHOT",
     "mixins": [
         "CraftingInventoryMixin",
         "CraftingResultSlotAccess",
