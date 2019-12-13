@@ -9,7 +9,7 @@ import net.fabricmc.fabric.api.server.PlayerStream;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LightningEntity;
-import net.minecraft.entity.ai.brain.MemoryModuleType;
+import net.minecraft.entity.ai.brain.*;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.mob.WitchEntity;
 import net.minecraft.entity.passive.AbstractTraderEntity;
@@ -20,6 +20,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.scoreboard.AbstractTeam;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.village.VillagerData;
 import net.minecraft.village.VillagerType;
 import net.minecraft.world.World;
@@ -29,6 +31,7 @@ import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
@@ -38,6 +41,14 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 public abstract class VillagerEntityMixin extends AbstractTraderEntity implements NamedVillager {
     private String firstName;
     private String lastName;
+
+    private static final Schedule CRAFTER_SCHEDULE = new ScheduleBuilder(Registry.register(Registry.SCHEDULE, new Identifier("proletarian", "villager_crafting"), new Schedule()))
+            .withActivity(10, Activity.IDLE)
+            .withActivity(1000, Activity.WORK)
+            .withActivity(9000, Activity.MEET)
+            .withActivity(10000, Activity.WORK)
+            .withActivity(12000, Activity.REST)
+            .build();
 
     @Shadow @Final @Mutable private static ImmutableList<MemoryModuleType<?>> MEMORY_MODULES =
             ImmutableList.of(MemoryModuleType.HOME,
@@ -85,6 +96,14 @@ public abstract class VillagerEntityMixin extends AbstractTraderEntity implement
             lastName = VillagerNamer.getLastName(villagerType);
             PlayerStream.watching(this).forEach(player -> ProletarianNetworking.INSTANCE.sendVillagerName(player, this, firstName, lastName));
         }
+    }
+
+    @ModifyArg(method = "initBrain", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/ai/brain/Brain;setSchedule(Lnet/minecraft/entity/ai/brain/Schedule;)V"))
+    private Schedule initCrafterBrain(Schedule original) {
+        if (!this.isBaby() && this.getVillagerData().getProfession().equals(CustomProfessionInit.INSTANCE.getProfession())) {
+            return CRAFTER_SCHEDULE;
+        }
+        return original;
     }
 
     public Text getName() {

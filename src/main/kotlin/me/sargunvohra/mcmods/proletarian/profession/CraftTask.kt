@@ -61,7 +61,7 @@ class CraftTask : Task<VillagerEntity>(
         // we are not focused on anything other than our job site
         val lookTarget = villager.brain.getOptionalMemory(MemoryModuleType.LOOK_TARGET).orElse(null) ?: null
         if (lookTarget != null && lookTarget.blockPos != jobSite.pos)
-            return false
+            if (Random().nextInt(5) < 3) return false
 
         // our job site is the right type
         val station = world.getBlockEntity(jobSite.pos) as? CraftingStationBlockEntity
@@ -91,10 +91,11 @@ class CraftTask : Task<VillagerEntity>(
         }
 
         // we've gossipped in the past three days
-        if (villager.world.time - access.proletarian_getGossipStartTime() > 72000L) {
-            complain(villager, VillageGossipType.MINOR_NEGATIVE)
-            return false
-        }
+        //TODO: figure out if this is too disruptive to villagers working, with the look target thing
+//        if (villager.world.time - access.proletarian_getGossipStartTime() > 72000L) {
+//            complain(villager, VillageGossipType.MINOR_NEGATIVE)
+//            return false
+//        }
 
         targetStation = station
         return true

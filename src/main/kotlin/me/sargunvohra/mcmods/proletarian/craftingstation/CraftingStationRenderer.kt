@@ -45,18 +45,20 @@ class CraftingStationRenderer(dispatcher: BlockEntityRenderDispatcher) : BlockEn
             matrices.translate(.69 - .19 * row, 1.07, .69 - .19 * col)
 
             if (itemRenderer.getHeldItemModel(stack, entity.world!!, null).hasDepthInGui()) {
-                matrices.multiply(Vector3f.NEGATIVE_X.getDegreesQuaternion((-90.0).toFloat()))
+                matrices.translate(0.0, -0.03, 0.0)
+                matrices.multiply(Vector3f.NEGATIVE_X.getDegreesQuaternion(-90.0f))
 //                GLStateManager.rotated(-90.0, 0.0, 1.0, 0.0)
+                matrices.scale(.2f, .2f, .2f)
             } else {
                 matrices.translate(0.0, -0.064, 0.0)
-                matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(90.0.toFloat()))
+                matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(90.0f))
 //                GLStateManager.rotated(90.0, 1.0, 0.0, 0.0)
-                matrices.multiply(Vector3f.NEGATIVE_X.getDegreesQuaternion(90.0.toFloat()))
+                matrices.multiply(Vector3f.NEGATIVE_X.getDegreesQuaternion(90.0f))
 //                GLStateManager.rotated(180.0, 0.0, 1.0, 0.0)
+                matrices.scale(.14f, .14f, .14f)
             }
 
-            matrices.scale(.14.toFloat(), .14.toFloat(), .14.toFloat())
-            itemRenderer.renderItem(stack, ModelTransformation.Type.GUI, WorldRenderer.getLightmapCoordinates(entity.world, entity.pos.up()), OverlayTexture.DEFAULT_UV, matrices, vertexConsumers)
+            itemRenderer.renderItem(stack, ModelTransformation.Type.FIXED, WorldRenderer.getLightmapCoordinates(entity.world, entity.pos.up()), OverlayTexture.DEFAULT_UV, matrices, vertexConsumers)
             matrices.pop()
         }
 
