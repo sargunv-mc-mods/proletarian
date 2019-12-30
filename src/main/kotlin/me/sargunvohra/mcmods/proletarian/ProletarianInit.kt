@@ -2,7 +2,7 @@ package me.sargunvohra.mcmods.proletarian
 
 import me.sargunvohra.mcmods.proletarian.command.CommandInit
 import me.sargunvohra.mcmods.proletarian.craftingstation.CraftingStationInit
-import me.sargunvohra.mcmods.proletarian.jobboard.JobBoardInit
+import me.sargunvohra.mcmods.proletarian.jobboard.VillageMarkerInit
 import me.sargunvohra.mcmods.proletarian.name.VillagerNamer
 import me.sargunvohra.mcmods.proletarian.network.ProletarianNetworking
 import me.sargunvohra.mcmods.proletarian.profession.CustomProfessionInit
@@ -14,7 +14,7 @@ import net.minecraft.resource.ResourceType
 object ProletarianInit : ModInitializer {
     override fun onInitialize() {
         CraftingStationInit.register()
-        JobBoardInit.register()
+        VillageMarkerInit.register()
         CustomProfessionInit.register()
         CommandInit.register()
         ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(VillagerNamer()) //TODO: create an init object?

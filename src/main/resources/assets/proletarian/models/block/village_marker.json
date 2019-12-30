@@ -1,0 +1,110 @@
+{
+	"credit": "Made with Blockbench",
+	"texture_size": [64, 64],
+	"textures": {
+		"0": "VillageMarker/VillageMarker",
+		"particle": "VillageMarker/VillageMarker"
+	},
+	"elements": [
+		{
+			"name": "VillagerNose",
+			"from": [7.6, 19, 10.25],
+			"to": [8.6, 21, 11.25],
+			"faces": {
+				"north": {"uv": [34, 39, 35, 41], "texture": "#0"},
+				"east": {"uv": [7, 36, 8, 38], "texture": "#0"},
+				"south": {"uv": [33, 39, 34, 41], "texture": "#0"},
+				"west": {"uv": [8, 36, 9, 38], "texture": "#0"},
+				"up": {"uv": [16, 14, 17, 15], "texture": "#0"},
+				"down": {"uv": [15, 14, 16, 15], "texture": "#0"}
+			}
+		},
+		{
+			"name": "Base1",
+			"from": [0.6, 0, 0.5],
+			"to": [15.6, 2, 15.5],
+			"faces": {
+				"north": {"uv": [33, 25, 48, 27], "texture": "#0"},
+				"east": {"uv": [33, 31, 48, 33], "texture": "#0"},
+				"south": {"uv": [33, 27, 48, 29], "texture": "#0"},
+				"west": {"uv": [33, 29, 48, 31], "texture": "#0"},
+				"up": {"uv": [0, 0, 15, 15], "texture": "#0"},
+				"down": {"uv": [0, 15, 15, 30], "texture": "#0"}
+			}
+		},
+		{
+			"name": "Base2",
+			"from": [2.6, 2, 2.5],
+			"to": [13.6, 5, 13.5],
+			"faces": {
+				"north": {"uv": [26, 22, 37, 25], "texture": "#0"},
+				"east": {"uv": [33, 33, 44, 36], "texture": "#0"},
+				"south": {"uv": [15, 11, 26, 14], "texture": "#0"},
+				"west": {"uv": [31, 18, 42, 21], "texture": "#0"},
+				"up": {"uv": [15, 0, 26, 11], "texture": "#0"},
+				"down": {"uv": [15, 15, 26, 26], "texture": "#0"}
+			}
+		},
+		{
+			"name": "Base3",
+			"from": [3.6, 2, 3.5],
+			"to": [12.6, 8, 12.5],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8.1, 7, 8]},
+			"faces": {
+				"north": {"uv": [31, 12, 40, 18], "texture": "#0"},
+				"east": {"uv": [0, 30, 9, 36], "texture": "#0"},
+				"south": {"uv": [31, 6, 40, 12], "texture": "#0"},
+				"west": {"uv": [31, 0, 40, 6], "texture": "#0"},
+				"up": {"uv": [24, 26, 33, 35], "rotation": 90, "texture": "#0"},
+				"down": {"uv": [15, 26, 24, 35], "rotation": 270, "texture": "#0"}
+			}
+		},
+		{
+			"name": "VillagerBody",
+			"from": [5.6, 8, 6.5],
+			"to": [10.6, 19, 9.5],
+			"faces": {
+				"north": {"uv": [26, 11, 31, 22], "texture": "#0"},
+				"east": {"uv": [12, 30, 15, 41], "texture": "#0"},
+				"south": {"uv": [26, 0, 31, 11], "texture": "#0"},
+				"west": {"uv": [9, 30, 12, 41], "texture": "#0"},
+				"up": {"uv": [37, 21, 42, 24], "texture": "#0"},
+				"down": {"uv": [4, 39, 9, 42], "texture": "#0"}
+			}
+		},
+		{
+			"name": "VillagerArms",
+			"from": [4.6, 14, 7.5],
+			"to": [11.6, 18, 10],
+			"rotation": {"angle": -45, "axis": "x", "origin": [8.1, 16.5, 8]},
+			"faces": {
+				"north": {"uv": [22, 35, 29, 39], "texture": "#0"},
+				"east": {"uv": [30, 39, 33, 43], "texture": "#0"},
+				"south": {"uv": [15, 35, 22, 39], "texture": "#0"},
+				"west": {"uv": [24, 39, 27, 43], "texture": "#0"},
+				"up": {"uv": [0, 36, 7, 39], "texture": "#0"},
+				"down": {"uv": [29, 36, 36, 39], "texture": "#0"}
+			}
+		},
+		{
+			"name": "VillagerHead",
+			"from": [6.6, 19, 6.25],
+			"to": [9.6, 23.75, 10.25],
+			"faces": {
+				"north": {"uv": [18, 39, 21, 44], "texture": "#0"},
+				"east": {"uv": [0, 39, 4, 44], "texture": "#0"},
+				"south": {"uv": [15, 39, 18, 44], "texture": "#0"},
+				"west": {"uv": [36, 36, 40, 41], "texture": "#0"},
+				"up": {"uv": [27, 39, 30, 43], "texture": "#0"},
+				"down": {"uv": [21, 39, 24, 43], "texture": "#0"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "VillageMarker",
+			"origin": [8, 8, 8],
+			"children": [0, 1, 2, 3, 4, 5, 6]
+		}
+	]
+}

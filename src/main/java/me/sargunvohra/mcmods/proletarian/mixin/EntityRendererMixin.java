@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 
 @Mixin(EntityRenderer.class)
-public class EntityRendererMixin<T extends Entity> {
+public abstract class EntityRendererMixin<T extends Entity> {
 	@ModifyArg(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/entity/EntityRenderer;renderLabelIfPresent(Lnet/minecraft/entity/Entity;Ljava/lang/String;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V"))
 	private String injectVillagerName(T entity, String original, MatrixStack matrices, VertexConsumerProvider vertexProviders, int light) {
 		if (entity instanceof NamedVillager) return ((NamedVillager)entity).getRenderedName();

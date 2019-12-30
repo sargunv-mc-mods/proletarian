@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.ArrayList;
 
 @Mixin(VillagerTaskListProvider.class)
-public class VillagerTaskListProviderMixin {
+public abstract class VillagerTaskListProviderMixin {
 
     @Inject(method = "createWorkTasks", at = @At("RETURN"), cancellable = true)
     private static void injectCraftTaskIntoWorkTasks(

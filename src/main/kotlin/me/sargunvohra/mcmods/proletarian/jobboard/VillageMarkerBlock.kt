@@ -27,7 +27,7 @@ import net.minecraft.world.World
 import java.util.*
 
 @Suppress("OverridingDeprecatedMember")
-object JobBoardBlock: Block(
+object VillageMarkerBlock: Block(
     FabricBlockSettings
         .of(Material.WOOD)
         .strength(2.5F, 2.5F)
@@ -55,8 +55,7 @@ object JobBoardBlock: Block(
 
     override fun randomTick(state: BlockState?, world: ServerWorld?, pos: BlockPos?, random: Random?) {
         if (!world!!.isClient) {
-            val server: ServerWorld = world as ServerWorld
-            val poiPos: Optional<BlockPos> = server.pointOfInterestStorage.getNearestPosition(
+            val poiPos: Optional<BlockPos> = world.pointOfInterestStorage.getNearestPosition(
                 { true },
                 { true },
                 pos,
