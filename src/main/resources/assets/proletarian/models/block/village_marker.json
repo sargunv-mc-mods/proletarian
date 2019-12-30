@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"texture_size": [64, 64],
 	"textures": {
-		"0": "VillageMarker/VillageMarker",
-		"particle": "VillageMarker/VillageMarker"
+		"0": "proletarian:block/village_marker",
+		"particle": "proletarian:block/village_marker"
 	},
 	"elements": [
 		{
