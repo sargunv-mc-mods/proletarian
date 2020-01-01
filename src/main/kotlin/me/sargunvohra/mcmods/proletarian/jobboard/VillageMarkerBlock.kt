@@ -4,6 +4,7 @@ import net.fabricmc.fabric.api.block.FabricBlockSettings
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.block.Material
+import net.minecraft.entity.EntityContext
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.passive.VillagerEntity
 import net.minecraft.entity.player.PlayerEntity
@@ -21,8 +22,11 @@ import net.minecraft.util.Hand
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
+import net.minecraft.util.shape.VoxelShape
+import net.minecraft.util.shape.VoxelShapes
 import net.minecraft.village.PointOfInterestStorage
 import net.minecraft.village.VillagerType
+import net.minecraft.world.BlockView
 import net.minecraft.world.World
 import java.util.*
 
@@ -33,11 +37,17 @@ object VillageMarkerBlock: Block(
         .strength(2.5F, 2.5F)
         .sounds(BlockSoundGroup.WOOD)
         .ticksRandomly()
+        .nonOpaque()
         .build()
 ) {
 
     init {
         defaultState = this.stateManager.defaultState.with(Properties.HORIZONTAL_FACING, Direction.NORTH)
+    }
+
+    override fun getOutlineShape(state: BlockState?, view: BlockView?, pos: BlockPos?, ePos: EntityContext?): VoxelShape {
+        //TODO: fix once blockbench voxelshape export works again
+        return VoxelShapes.cuboid(0.5/16.0, 0.0, 0.5/16.0, 15.5/16.0, 1.0, 15.5/16.0)
     }
 
     override fun getPlacementState(context: ItemPlacementContext) =
