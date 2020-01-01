@@ -1,6 +1,5 @@
 package me.sargunvohra.mcmods.proletarian.craftingstation
 
-import com.mojang.blaze3d.platform.GlStateManager
 import me.sargunvohra.mcmods.proletarian.rotateRenderState
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.render.OverlayTexture

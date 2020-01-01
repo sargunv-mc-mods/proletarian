@@ -30,10 +30,14 @@ object ProletarianNetworking {
             val entity = context.player.world.getEntityById(id)
             if (entity is NamedVillager) {
                 val villager = entity as NamedVillager
-                val first = VillagerNamer.getFirstName(villager.villagerType)
-                val last = VillagerNamer.getLastName(villager.villagerType)
-                villager.setName(first, last)
-                sendVillagerName(context.player, entity, first, last)
+                if (villager.firstName != null && villager.lastName != null) {
+                    sendVillagerName(context.player, entity, villager.firstName, villager.lastName)
+                } else {
+                    val first = VillagerNamer.getFirstName(villager.villagerType)
+                    val last = VillagerNamer.getLastName(villager.villagerType)
+                    villager.setName(first, last)
+                    sendVillagerName(context.player, entity, first, last)
+                }
             }
         }
     }

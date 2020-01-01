@@ -89,15 +89,6 @@ public abstract class VillagerEntityMixin extends AbstractTraderEntity implement
         super(type, world);
     }
 
-    @Inject(method = "<init>(Lnet/minecraft/entity/EntityType;Lnet/minecraft/world/World;Lnet/minecraft/village/VillagerType;)V", at = @At("RETURN"))
-    private void genNameOnInit(EntityType<? extends VillagerEntity> type, World world, VillagerType villagerType, CallbackInfo info) {
-        if (!world.isClient) {
-            firstName = VillagerNamer.getFirstName(villagerType);
-            lastName = VillagerNamer.getLastName(villagerType);
-            PlayerStream.watching(this).forEach(player -> ProletarianNetworking.INSTANCE.sendVillagerName(player, this, firstName, lastName));
-        }
-    }
-
     @ModifyArg(method = "initBrain", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/ai/brain/Brain;setSchedule(Lnet/minecraft/entity/ai/brain/Schedule;)V"))
     private Schedule initCrafterBrain(Schedule original) {
         if (!this.isBaby() && this.getVillagerData().getProfession().equals(CustomProfessionInit.INSTANCE.getProfession())) {
@@ -197,5 +188,15 @@ public abstract class VillagerEntityMixin extends AbstractTraderEntity implement
     @Override
     public VillagerType getVillagerType() {
         return getVillagerData().getType();
+    }
+
+    @Override
+    public String getFirstName() {
+        return firstName;
+    }
+
+    @Override
+    public String getLastName() {
+        return lastName;
     }
 }

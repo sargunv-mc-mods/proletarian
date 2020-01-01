@@ -6,4 +6,6 @@ public interface NamedVillager {
 	String getRenderedName();
 	void setName(String first, String last);
 	VillagerType getVillagerType();
+	String getFirstName();
+	String getLastName();
 }
