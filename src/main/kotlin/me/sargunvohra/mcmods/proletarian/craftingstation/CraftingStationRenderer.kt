@@ -1,19 +1,17 @@
 package me.sargunvohra.mcmods.proletarian.craftingstation
 
-import com.mojang.blaze3d.platform.GLX
-import com.mojang.blaze3d.platform.GlStateManager
-import com.mojang.blaze3d.systems.RenderSystem
-import me.sargunvohra.mcmods.proletarian.rotateRenderState
 import net.minecraft.client.MinecraftClient
-import net.minecraft.client.render.DiffuseLighting
 import net.minecraft.client.render.VertexConsumerProvider
+import net.minecraft.client.render.WorldRenderer
 import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher
 import net.minecraft.client.render.block.entity.BlockEntityRenderer
 import net.minecraft.client.render.model.json.ModelTransformation
 import net.minecraft.client.util.math.MatrixStack
+import net.minecraft.client.util.math.Vector3f
 import net.minecraft.state.property.Properties
 
-class CraftingStationRenderer(dispatcher: BlockEntityRenderDispatcher) : BlockEntityRenderer<CraftingStationBlockEntity>(dispatcher) {
+class CraftingStationRenderer(dispatcher: BlockEntityRenderDispatcher)
+    : BlockEntityRenderer<CraftingStationBlockEntity>(dispatcher) {
 
     private val slotIndices = (0 until 9)
 
@@ -25,62 +23,49 @@ class CraftingStationRenderer(dispatcher: BlockEntityRenderDispatcher) : BlockEn
         light: Int,
         overlay: Int
     ) {
-//        val itemRenderer = MinecraftClient.getInstance().itemRenderer
-//        val blockState = blockEntity.world?.getBlockState(blockEntity.pos)
-//        if (blockState?.block != CraftingStationBlock) return
-//        val world = blockEntity.world!!
-//
-//        matrices.multiply(blockState.get(Properties.HORIZONTAL_FACING).rotationQuaternion)
-    }
+        val itemRenderer = MinecraftClient.getInstance().itemRenderer
+        val blockState = blockEntity.world?.getBlockState(blockEntity.pos)
+        if (blockState?.block != CraftingStationBlock) return
 
-//    override fun render(
-//        entity: CraftingStationBlockEntity,
-//        x: Double,
-//        y: Double,
-//        z: Double,
-//        partialTicks: Float,
-//        destroyStage: Int
-//    ) {
-//        super.render(entity, x, y, z, partialTicks, destroyStage)
-//        val itemRenderer = MinecraftClient.getInstance().itemRenderer
-//
-//        val state = entity.world?.getBlockState(entity.pos)
-//        if (state?.block != CraftingStationBlock) return
-//
-//        val lightmapIndex = this.world.getLightmapIndex(entity.pos.up(), 0)
-//        GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, (lightmapIndex % 65536).toFloat(), (lightmapIndex / 65536).toFloat())
-//
-//        GlStateManager.pushMatrix()
-//        GlStateManager.translated(x, y, z)
-//        GlStateManager.disableRescaleNormal()
-//
-//        rotateRenderState(state.get(Properties.HORIZONTAL_FACING))
-//
-//        for (slot in slotIndices) {
-//            val stack = entity.craftingInv.getInvStack(slot)
-//            if (stack.isEmpty) continue
-//
-//            val row = slot % 3
-//            val col = slot / 3
-//
-//            GlStateManager.pushMatrix()
-//            DiffuseLighting.enable()
-//            GlStateManager.enableLighting()
-//            GlStateManager.translated(.69 - .19 * row, 1.07, .69 - .19 * col)
-//
-//            if (itemRenderer.getModel(stack).hasDepthInGui()) {
-//                GlStateManager.rotated(-90.0, 0.0, 1.0, 0.0)
-//            } else {
-//                GlStateManager.translated(0.0, -0.064, 0.0)
-//                GlStateManager.rotated(90.0, 1.0, 0.0, 0.0)
-//                GlStateManager.rotated(180.0, 0.0, 1.0, 0.0)
-//            }
-//
-//            GlStateManager.scaled(.14, .14, .14)
-//            itemRenderer.renderItem(stack, ModelTransformation.Type.NONE)
-//            GlStateManager.popMatrix()
-//        }
-//
-//        GlStateManager.popMatrix()
-//    }
+        val surfaceLight = WorldRenderer.getLightmapCoordinates(blockEntity.world, blockEntity.pos.up())
+
+        matrices.push()
+
+        matrices.translate(0.5, 1.0, 0.5)
+        val rot = blockState.get(Properties.HORIZONTAL_FACING).opposite.asRotation()
+        matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-rot))
+
+        for (slotIndex in slotIndices) {
+            val itemStack = blockEntity.craftingInv.getInvStack(slotIndex)
+            if (itemStack.isEmpty) continue
+
+            val row = slotIndex % 3
+            val col = slotIndex / 3
+
+            matrices.push()
+            matrices.translate(.19 - .19 * row, .07, .19 - .19 * col)
+
+            if (itemRenderer.models.getModel(itemStack).hasDepth()) {
+                matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-90f))
+            } else {
+                matrices.translate(0.0, -0.064, 0.0)
+                matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(90f))
+                matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(180f))
+            }
+
+            matrices.scale(.14f, .14f, .14f)
+            itemRenderer.renderItem(
+                itemStack,
+                ModelTransformation.Mode.NONE,
+                surfaceLight,
+                overlay,
+                matrices,
+                vertexConsumers
+            )
+
+            matrices.pop()
+        }
+
+        matrices.pop()
+    }
 }
