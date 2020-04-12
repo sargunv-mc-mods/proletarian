@@ -2,6 +2,7 @@ package me.sargunvohra.mcmods.proletarian.profession
 
 import me.sargunvohra.mcmods.proletarian.canMergeWith
 import me.sargunvohra.mcmods.proletarian.craftingstation.CraftingStationBlockEntity
+import me.sargunvohra.mcmods.proletarian.mixin.VillagerEntityAccess
 import me.sargunvohra.mcmods.proletarian.neighbors
 import net.minecraft.entity.ai.brain.BlockPosLookTarget
 import net.minecraft.entity.ai.brain.MemoryModuleState
@@ -15,19 +16,25 @@ import net.minecraft.server.world.ServerWorld
 import net.minecraft.sound.SoundEvents
 import net.minecraft.util.DefaultedList
 import net.minecraft.util.ItemScatterer
+import net.minecraft.util.Timestamp
+import net.minecraft.village.VillageGossipType
 import net.minecraft.world.GameRules
+import java.util.*
 
 class CraftTask : Task<VillagerEntity>(
     mapOf(
         MemoryModuleType.LOOK_TARGET to MemoryModuleState.REGISTERED,
         MemoryModuleType.WALK_TARGET to MemoryModuleState.VALUE_ABSENT,
-        MemoryModuleType.JOB_SITE to MemoryModuleState.VALUE_PRESENT
+        MemoryModuleType.JOB_SITE to MemoryModuleState.VALUE_PRESENT,
+        CustomProfessionInit.lastEatenModule to MemoryModuleState.REGISTERED
     ),
     BASE_DELAY
 ) {
 
     private var nextCraftTime = 0L
     private lateinit var targetStation: CraftingStationBlockEntity
+
+    private val UNION_UUID = UUID.fromString("3c11d54e-f8cd-45d7-8cff-6e99fab0fb49")
 
     override fun shouldRun(world: ServerWorld, villager: VillagerEntity): Boolean {
         // apply cool-down time
@@ -54,14 +61,53 @@ class CraftTask : Task<VillagerEntity>(
         // we are not focused on anything other than our job site
         val lookTarget = villager.brain.getOptionalMemory(MemoryModuleType.LOOK_TARGET).orElse(null) ?: null
         if (lookTarget != null && lookTarget.blockPos != jobSite.pos)
-            return false
+            if (Random().nextInt(5) < 3) return false
 
         // our job site is the right type
         val station = world.getBlockEntity(jobSite.pos) as? CraftingStationBlockEntity
             ?: return false
 
+        // parameters that affect our happiness
+        val access = villager as VillagerEntityAccess
+
+        // we've slept recently
+        val slept: Optional<Timestamp> = villager.brain.getOptionalMemory(MemoryModuleType.LAST_SLEPT) as Optional<Timestamp>
+        if (!slept.isPresent || villager.world.time - slept.get().time > 24000L) {
+            complain(villager, VillageGossipType.MAJOR_NEGATIVE)
+            return false
+        }
+
+        // we've eaten food recently, or have food to eat otherwise
+        val eaten: Optional<Timestamp> = villager.brain.getOptionalMemory(CustomProfessionInit.lastEatenModule) as Optional<Timestamp>
+        if (!eaten.isPresent || villager.world.time - eaten.get().time > 3000L) {
+            access.proletarian_consumeAvailableFood()
+            if (access.proletarian_getFoodLevel() < 1) {
+                complain(villager, VillageGossipType.MAJOR_NEGATIVE)
+                return false
+            } else {
+                villager.brain.putMemory(CustomProfessionInit.lastEatenModule, Timestamp.of(villager.world.time))
+                access.proletarian_depleteFood(1)
+            }
+        }
+
+        // we've gossipped in the past three days
+        //TODO: figure out if this is too disruptive to villagers working, with the look target thing
+//        if (villager.world.time - access.proletarian_getGossipStartTime() > 72000L) {
+//            complain(villager, VillageGossipType.MINOR_NEGATIVE)
+//            return false
+//        }
+
         targetStation = station
         return true
+    }
+
+    //complain, and shift gossip further towards unionization (NYI)
+    private fun complain(villager: VillagerEntity, type: VillageGossipType) {
+        val access = villager as VillagerEntityAccess
+        if (villager.world.time % 40 == 0L) {
+            access.proletarian_sayNo()
+            access.proletarian_getGossips().startGossip(UNION_UUID, type, 1)
+        }
     }
 
     private val CraftingStationBlockEntity.recipeManager get() = world?.server?.recipeManager

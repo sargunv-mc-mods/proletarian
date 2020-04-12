@@ -1,5 +1,6 @@
 {
     "block.proletarian.crafting_station": "Crafting Station",
+    "block.proletarian.village_marker": "Village Marker",
     "container.proletarian.crafting_station": "Crafting Station",
     "entity.minecraft.villager.proletarian": "Proletarian"
 }

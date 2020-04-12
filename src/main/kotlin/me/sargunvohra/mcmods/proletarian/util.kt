@@ -1,10 +1,15 @@
 package me.sargunvohra.mcmods.proletarian
 
+import net.minecraft.block.entity.BannerPattern
 import net.minecraft.inventory.Inventories
 import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemStack
+import net.minecraft.item.Items
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.text.TranslatableText
 import net.minecraft.util.DefaultedList
+import net.minecraft.util.DyeColor
+import net.minecraft.util.Formatting
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 
@@ -30,4 +35,21 @@ fun ItemStack.canMergeWith(other: ItemStack): Boolean {
         count > maxCount -> false
         else -> ItemStack.areTagsEqual(this, other)
     }
+}
+
+fun getUnityBanner(): ItemStack {
+    val stack = ItemStack(Items.BLACK_BANNER)
+    val tag = stack.getOrCreateSubTag("BlockEntityTag")
+    val list = BannerPattern.Patterns()
+        .add(BannerPattern.BRICKS, DyeColor.GRAY)
+        .add(BannerPattern.CIRCLE_MIDDLE, DyeColor.LIGHT_GRAY)
+        .add(BannerPattern.FLOWER, DyeColor.RED)
+        .add(BannerPattern.TRIANGLES_BOTTOM, DyeColor.RED)
+        .add(BannerPattern.TRIANGLES_TOP, DyeColor.RED)
+        .add(BannerPattern.CURLY_BORDER, DyeColor.RED)
+        .add(BannerPattern.BORDER, DyeColor.RED)
+        .toTag()
+    tag.put("Patterns", list)
+    stack.setCustomName(TranslatableText("block.proletarian.unity_banner").formatted(Formatting.GOLD))
+    return stack
 }
