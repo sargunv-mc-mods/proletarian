@@ -7,21 +7,8 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.DefaultedList
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
-import kotlin.reflect.KClass
-import kotlin.reflect.jvm.isAccessible
 
 fun id(name: String) = Identifier("proletarian", name)
-
-fun <T : Any> construct(`class`: KClass<T>, vararg args: Any?): T {
-    `class`.constructors.forEach { constructor ->
-        constructor.isAccessible = true
-        try {
-            return constructor.call(*args)
-        } catch (e: IllegalArgumentException) {
-        }
-    }
-    throw IllegalArgumentException("None of the constructors matched the provided args!")
-}
 
 fun Inventory.invToTag(tag: CompoundTag): CompoundTag {
     val items = (0 until invSize).map { i -> getInvStack(i) }.toTypedArray()

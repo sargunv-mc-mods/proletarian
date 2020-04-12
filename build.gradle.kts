@@ -47,6 +47,7 @@ version = "${gitVersion()}+mc$minecraftVersion"
 group = modMavenGroup
 
 minecraft {
+    accessWidener = file("src/main/resources/$modJarBaseName.accesswidener")
 }
 
 configurations {
