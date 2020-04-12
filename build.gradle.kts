@@ -38,7 +38,6 @@ repositories {
     mavenCentral()
     jcenter()
     maven(url = "http://maven.fabricmc.net")
-    maven(url = "http://server.bbkr.space:8081/artifactory/libs-release")
 }
 
 val gitVersion: groovy.lang.Closure<Any> by extra
@@ -68,9 +67,6 @@ dependencies {
     modImplementation("net.fabricmc:fabric-language-kotlin:1.3.61+build.1")
 
     modRuntime("io.github.prospector:modmenu:1.10.2+build.32")
-
-    modImplementation("io.github.cottonmc:Jankson-Fabric:2.0.0+j1.2.0")
-    include("io.github.cottonmc:Jankson-Fabric:2.0.0+j1.2.0")
 }
 
 val processResources = tasks.getByName<ProcessResources>("processResources") {

@@ -12,9 +12,6 @@
         "VillagerTaskListProviderMixin",
         "PointOfInterestTypeAccess"
     ],
-    "client": [
-        "EntityRendererMixin"
-    ],
     "injectors": {
         "defaultRequire": 1
     }

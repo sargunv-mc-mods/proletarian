@@ -20,10 +20,4 @@ public interface VillagerEntityAccess {
 
     @Accessor(value = "foodLevel")
     byte proletarian_getFoodLevel();
-
-    @Accessor(value = "gossipStartTime")
-    long proletarian_getGossipStartTime();
-
-    @Accessor(value = "gossip")
-    VillagerGossips proletarian_getGossips();
 }

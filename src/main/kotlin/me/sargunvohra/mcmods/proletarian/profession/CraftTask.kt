@@ -13,13 +13,12 @@ import net.minecraft.entity.passive.VillagerEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.recipe.RecipeType
 import net.minecraft.server.world.ServerWorld
+import net.minecraft.sound.SoundCategory
 import net.minecraft.sound.SoundEvents
 import net.minecraft.util.DefaultedList
 import net.minecraft.util.ItemScatterer
 import net.minecraft.util.Timestamp
-import net.minecraft.village.VillageGossipType
 import net.minecraft.world.GameRules
-import java.util.*
 
 class CraftTask : Task<VillagerEntity>(
     mapOf(
@@ -33,8 +32,6 @@ class CraftTask : Task<VillagerEntity>(
 
     private var nextCraftTime = 0L
     private lateinit var targetStation: CraftingStationBlockEntity
-
-    private val UNION_UUID = UUID.fromString("3c11d54e-f8cd-45d7-8cff-6e99fab0fb49")
 
     override fun shouldRun(world: ServerWorld, villager: VillagerEntity): Boolean {
         // apply cool-down time
@@ -59,9 +56,9 @@ class CraftTask : Task<VillagerEntity>(
             return false
 
         // we are not focused on anything other than our job site
-        val lookTarget = villager.brain.getOptionalMemory(MemoryModuleType.LOOK_TARGET).orElse(null) ?: null
-        if (lookTarget != null && lookTarget.blockPos != jobSite.pos)
-            if (Random().nextInt(5) < 3) return false
+        val lookTarget = villager.brain.getOptionalMemory(MemoryModuleType.LOOK_TARGET)
+        if (lookTarget.isPresent && lookTarget.get().blockPos != jobSite.pos)
+            return false
 
         // our job site is the right type
         val station = world.getBlockEntity(jobSite.pos) as? CraftingStationBlockEntity
@@ -70,43 +67,43 @@ class CraftTask : Task<VillagerEntity>(
         // parameters that affect our happiness
         val access = villager as VillagerEntityAccess
 
-        // we've slept recently
-        val slept: Optional<Timestamp> = villager.brain.getOptionalMemory(MemoryModuleType.LAST_SLEPT) as Optional<Timestamp>
+        // we've slept in the last "day"
+        val slept = villager.brain.getOptionalMemory(MemoryModuleType.LAST_SLEPT)
         if (!slept.isPresent || villager.world.time - slept.get().time > 24000L) {
-            complain(villager, VillageGossipType.MAJOR_NEGATIVE)
+            complain(villager)
             return false
         }
 
-        // we've eaten food recently, or have food to eat otherwise
-        val eaten: Optional<Timestamp> = villager.brain.getOptionalMemory(CustomProfessionInit.lastEatenModule) as Optional<Timestamp>
-        if (!eaten.isPresent || villager.world.time - eaten.get().time > 3000L) {
+        // we've eaten food in the last four "hours", or have food to eat otherwise
+        val eaten = villager.brain.getOptionalMemory(CustomProfessionInit.lastEatenModule)
+        if (!eaten.isPresent || villager.world.time - eaten.get().time > 4000L) {
             access.proletarian_consumeAvailableFood()
             if (access.proletarian_getFoodLevel() < 1) {
-                complain(villager, VillageGossipType.MAJOR_NEGATIVE)
+                complain(villager)
                 return false
             } else {
                 villager.brain.putMemory(CustomProfessionInit.lastEatenModule, Timestamp.of(villager.world.time))
                 access.proletarian_depleteFood(1)
+                world.playSoundFromEntity(
+                    null,
+                    villager,
+                    SoundEvents.ENTITY_GENERIC_EAT,
+                    SoundCategory.NEUTRAL,
+                    1.0f,
+                    1.0f + (world.random.nextFloat() - world.random.nextFloat()) * 0.4f
+                )
             }
         }
-
-        // we've gossipped in the past three days
-        //TODO: figure out if this is too disruptive to villagers working, with the look target thing
-//        if (villager.world.time - access.proletarian_getGossipStartTime() > 72000L) {
-//            complain(villager, VillageGossipType.MINOR_NEGATIVE)
-//            return false
-//        }
 
         targetStation = station
         return true
     }
 
-    //complain, and shift gossip further towards unionization (NYI)
-    private fun complain(villager: VillagerEntity, type: VillageGossipType) {
+    private fun complain(villager: VillagerEntity) {
         val access = villager as VillagerEntityAccess
         if (villager.world.time % 40 == 0L) {
             access.proletarian_sayNo()
-            access.proletarian_getGossips().startGossip(UNION_UUID, type, 1)
+            (villager.world as? ServerWorld)?.sendEntityStatus(villager, 13)
         }
     }
 

@@ -1,0 +1,3 @@
+* Added food requirement: Proletarians will not craft unless they have eaten recently (4000 MC ticks or 3min+20sec irl)
+* Added sleep requirement: Proletarians will not craft unless they have slept recently (1 MC day or 20min irl)
+* Expanded work schedule: Proletarians will spend more time working and less time idling than other villager types
