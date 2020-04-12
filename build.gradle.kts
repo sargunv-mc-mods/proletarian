@@ -16,8 +16,8 @@ plugins {
     kotlin("jvm") version "1.3.40"
     idea
     `maven-publish`
-    id("fabric-loom") version "0.2.3-SNAPSHOT"
-    id("com.palantir.git-version") version "0.11.0"
+    id("fabric-loom") version "0.2.7-SNAPSHOT"
+    id("com.palantir.git-version") version "0.12.3"
     id("com.matthewprenger.cursegradle") version "1.4.0"
 }
 
@@ -59,11 +59,13 @@ configurations {
 
 dependencies {
     minecraft("com.mojang:minecraft:$minecraftVersion")
-    mappings("net.fabricmc:yarn:$minecraftVersion+build.3")
-    modCompile("net.fabricmc:fabric-loader:0.4.8+")
+    mappings("net.fabricmc:yarn:$minecraftVersion+build.14:v2")
+    modImplementation("net.fabricmc:fabric-loader:0.8.2+build.194")
 
-    modCompile("net.fabricmc.fabric-api:fabric-api:0.3.0+build.206")
-    modCompile("net.fabricmc:fabric-language-kotlin:1.3.40+")
+    modImplementation("net.fabricmc.fabric-api:fabric-api:0.5.1+build.294-1.15")
+    modImplementation("net.fabricmc:fabric-language-kotlin:1.3.61+build.1")
+
+    modRuntime("io.github.prospector:modmenu:1.10.2+build.32")
 }
 
 val processResources = tasks.getByName<ProcessResources>("processResources") {
@@ -108,6 +110,7 @@ if (versionDetails().isCleanTag) {
             })
             mainArtifact(file("${project.buildDir}/libs/${base.archivesBaseName}-$version.jar"))
             afterEvaluate {
+                mainArtifact(remapJar)
                 uploadTask.dependsOn(remapJar)
             }
         })

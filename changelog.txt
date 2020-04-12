@@ -1,1 +1,1 @@
-Fixed compatibility issue with MouseWheelie
+Update to MC 1.15.2

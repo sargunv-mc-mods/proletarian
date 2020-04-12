@@ -9,8 +9,8 @@ import net.minecraft.block.Block
 import net.minecraft.item.Item
 import net.minecraft.sound.SoundEvents
 import net.minecraft.util.registry.Registry
-import net.minecraft.village.PointOfInterestType
 import net.minecraft.village.VillagerProfession
+import net.minecraft.world.poi.PointOfInterestType
 
 object CustomProfessionInit {
 
@@ -20,18 +20,21 @@ object CustomProfessionInit {
     private val poiType = construct(
         PointOfInterestType::class,
         poiId.toString(),
-        ImmutableSet.copyOf(CraftingStationBlock.stateFactory.states),
+        ImmutableSet.copyOf(CraftingStationBlock.stateManager.states),
         1, // ticketCount
-        SoundEvents.ENTITY_VILLAGER_WORK_TOOLSMITH,
-        1 // ???
+        1 // searchDistance
     )
     val profession = construct(
         VillagerProfession::class,
-        professionId.toString(), poiType, ImmutableSet.of<Item>(), ImmutableSet.of<Block>()
+        professionId.toString(),
+        poiType,
+        ImmutableSet.of<Item>(),
+        ImmutableSet.of<Block>(),
+        SoundEvents.ENTITY_VILLAGER_WORK_TOOLSMITH
     )
 
     fun register() {
-        CraftingStationBlock.stateFactory.states.forEach {
+        CraftingStationBlock.stateManager.states.forEach {
             PointOfInterestTypeAccess.proletarian_getStatePoiMap()[it] = poiType
         }
         Registry.register(Registry.POINT_OF_INTEREST_TYPE, poiId, poiType)

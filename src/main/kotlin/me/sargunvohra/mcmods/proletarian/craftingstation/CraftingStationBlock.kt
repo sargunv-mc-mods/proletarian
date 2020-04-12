@@ -13,12 +13,9 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemPlacementContext
 import net.minecraft.item.ItemStack
 import net.minecraft.sound.BlockSoundGroup
-import net.minecraft.state.StateFactory
+import net.minecraft.state.StateManager
 import net.minecraft.state.property.Properties
-import net.minecraft.util.BlockMirror
-import net.minecraft.util.BlockRotation
-import net.minecraft.util.Hand
-import net.minecraft.util.ItemScatterer
+import net.minecraft.util.*
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
@@ -35,7 +32,7 @@ object CraftingStationBlock : BlockWithEntity(
 ) {
 
     init {
-        defaultState = stateFactory.defaultState.with(Properties.HORIZONTAL_FACING, Direction.NORTH)
+        defaultState = stateManager.defaultState.with(Properties.HORIZONTAL_FACING, Direction.NORTH)
     }
 
     override fun getPlacementState(context: ItemPlacementContext) =
@@ -47,20 +44,20 @@ object CraftingStationBlock : BlockWithEntity(
     override fun mirror(state: BlockState, mirror: BlockMirror) =
         state.rotate(mirror.getRotation(state.get(Properties.HORIZONTAL_FACING)))!!
 
-    override fun appendProperties(stateFactoryBuilder: StateFactory.Builder<Block, BlockState>) {
+    override fun appendProperties(stateFactoryBuilder: StateManager.Builder<Block, BlockState>) {
         stateFactoryBuilder.add(Properties.HORIZONTAL_FACING)
     }
 
     override fun createBlockEntity(blockView: BlockView) = CraftingStationBlockEntity()
 
-    override fun activate(
+    override fun onUse(
         state: BlockState,
         world: World,
         pos: BlockPos,
         player: PlayerEntity,
         hand: Hand,
         blockHitPos: BlockHitResult
-    ): Boolean {
+    ): ActionResult {
         if (!world.isClient) {
             val container = if (blockHitPos.pos.y - blockHitPos.blockPos.y > .75)
                 CraftingStationInit.CRAFTING_ID
@@ -76,7 +73,7 @@ object CraftingStationBlock : BlockWithEntity(
             }
         }
 
-        return true
+        return ActionResult.SUCCESS
     }
 
     override fun onPlaced(

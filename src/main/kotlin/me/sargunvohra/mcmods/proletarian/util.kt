@@ -50,16 +50,16 @@ fun ItemStack.canMergeWith(other: ItemStack): Boolean {
 fun rotateRenderState(dir: Direction) {
     when {
         dir === Direction.EAST -> {
-            GlStateManager.rotated(-90.0, 0.0, 1.0, 0.0)
-            GlStateManager.translated(0.0, 0.0, -1.0)
+            GlStateManager.rotatef(-90.0F, 0.0F, 1.0F, 0.0F)
+            GlStateManager.translatef(0.0F, 0.0F, -1.0F)
         }
         dir === Direction.SOUTH -> {
-            GlStateManager.rotated(-180.0, 0.0, 1.0, 0.0)
-            GlStateManager.translated(-1.0, 0.0, -1.0)
+            GlStateManager.rotatef(-180.0F, 0.0F, 1.0F, 0.0F)
+            GlStateManager.translatef(-1.0F, 0.0F, -1.0F)
         }
         dir === Direction.WEST -> {
-            GlStateManager.rotated(-270.0, 0.0, 1.0, 0.0)
-            GlStateManager.translated(-1.0, 0.0, 0.0)
+            GlStateManager.rotatef(-270.0F, 0.0F, 1.0F, 0.0F)
+            GlStateManager.translatef(-1.0F, 0.0F, 0.0F)
         }
     }
 }

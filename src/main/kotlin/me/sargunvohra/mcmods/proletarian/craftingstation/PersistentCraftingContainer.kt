@@ -22,7 +22,7 @@ class PersistentCraftingContainer(
         @Suppress("CAST_NEVER_SUCCEEDS")
         val access = this as CraftingTableContainerAccess
         val currentCraftingInv = access.proletarian_getCraftingInventory()
-        for (slot in slotList) {
+        for (slot in this.slots) {
             if (slot.inventory === currentCraftingInv) {
                 (slot as SlotAccess).proletarian_setInventory(craftingInv)
             }
@@ -62,7 +62,7 @@ class PersistentCraftingContainer(
         val myIndices = 1..9
         val playerIndices = 10..45
 
-        val slot: Slot? = slotList[slotIndex]
+        val slot: Slot? = this.slots[slotIndex]
         if (slot?.hasStack() == true) {
             val slotStack = slot.stack
             val original = slotStack.copy()
